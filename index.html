@@ -43,52 +43,57 @@
             style="color: #cc9933">upcoming</span>
     </p>
 
-    <style>
-        .display {
-            font-family: 'Bebas Neue';
-            margin: 40px;
-            text-align: center;
-            color: #335;
-            line-height: 0.6
+    <p style="margin: 20px; font-style: italic; font-size: 25px; color: #aac; display: none;" id="upcomingblock"><br><br><span id="upcomingnotice"></span></p>
 
-        }
-        .logo {
-            font-family: 'Righteous';
-            font-size: 30px;
-            margin: 20px;
-        }
+    <span id="today"></span>
 
-        a {
-            text-decoration: #aac underline;
-        }
+    <br class="lines">
+    <p class="logo">
+        <span style="color: #414256">kehillah</span><span style="color: #9590a5">.</span><span
+            style="color: #3399cc">tomorrow</span>
+    </p>
 
-        p {
-            line-height: 0.4
-        }
+    <p style="margin: 20px; font-style: italic; font-size: 25px; color: #aac; display: none;" id="tomorrowblock"><br><br><span id="tomorrownotice"></span></p>
+    
+    <span id="tomorrow"></span>
+    
+    <br class="lines">
 
-        .lines {
-            line-height: 1.5
-        }
+    <p class="logo">
+        <span style="color: #414256">kehillah</span><span style="color: #9590a5">.</span><span
+            style="color: #9933cc">future</span>
+    </p>
 
-        body {
-            font-family: 'Barlow Semi Condensed';
-            font-variant-numeric: tabular-nums;
-        }
-    </style>
+    <p id="credits" style="color:#aac; margin: 20px;" class="lines">
+    <span>Created by B. Gill.</span><br>
+    <span>Data sourced from the <a href="https://kehillah.org/wp-content/uploads/2022/08/MasterSchedule22_23.jpg" target="_blank" rel="noopener noreferrer"><span style="color: #aac">Kehillah master schedule</span></a>.</span><br>
+    <span><span style="font-family: Righteous">kehillah.today</span> is not affiliated with <a href="https://kehillah.org/" target="_blank" rel="noopener noreferrer"><span style="color: #aac">kehillah.org</span></a>.</span><br>
+    <span>Fonts used: <span style="font-family: Righteous">Righteous</span>, <span style="font-family: Bebas Neue">Bebas Neue</span>, and Barlow Semi Condensed.</span><br>
+    <span>v0.2 &mdash; 2022-08-20</span><br>
+    <span></p>
     <script>
         minutes = 0;
-        dnow = new Date();
-        var dotw = ["SUN", "MON", "TUES", "WED", "THU", "FRI", "SAT"]
-        var fulldotw = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Logsday"]
-        var fullmoty = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+        dnow = new Date(); //generates a date object
+        var dotw = ["SUN", "MON", "TUES", "WED", "THU", "FRI", "SAT"] //days of the week
+        var fulldotw = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Logsday"] //remove logsday
+        var fullmoty = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"] //months of the year
         var trigger = -1;
+        var ftrigger = -1;
         var theschedule = ""
-        var blockcolors = ["#c6c6d6","#6ec0d6","#8d7cc2","#c17ba0","#e06665","#2aa3ac","#d64087","#b4a7d5","#9fc5e9","#d6a6be",]
+        var tomorrowschedule = ""
+        var blockcolors = ["#c6c6d6","#6ec0d6","#8d7cc2","#c17ba0","#e06665","#2aa3ac","#d64087","#b4a7d5","#9fc5e9","#d6a6be","#aaccaa"] /* #0 is misc, 1-9 are blocks, 10 is lunch */
         var correctjsondata = ""
         var total = 0
+        var tomorrowtotal = 0
         var pageloaddate = dnow.getDate()
+        var tinyscreen = false;
+        var dashes = 2;
+        var dasharray = ["", "-", "⸻"]
+        var start = 0;
+        var tomorrowstart = 0;
+        var datesearch = 0;
 
-        document.getElementById('todayis').innerText = fulldotw[dnow.getDay()] + ", " + fullmoty[dnow.getMonth()] + " " + dnow.getDate() + " · " 
+        document.getElementById('todayis').innerText = fulldotw[dnow.getDay()] + ", " + fullmoty[dnow.getMonth()] + " " + dnow.getDate() + " · " //updates 
 
         function apz(num) { /*add prefix zero*/
           return (num < 10 ? '0' : '') + num;
@@ -121,9 +126,17 @@
             console.log(id)
             if(id.startsWith("Block")) {
                 return blockcolors[id.slice(-1)];
+            } else if(id.startsWith("Lunch")) {
+                return blockcolors[10];
             } else {
                 return blockcolors[0];
             }
+        }
+
+        function findNextDay() {
+            var tomorrow = new Date();
+            tomorrow.setDate(dnow.getDate() + 1)
+            return WhichScheduleToLoad(tomorrow.getFullYear() + "-" + apz(tomorrow.getMonth() + 1) + "-" + apz(tomorrow.getDate()), true)
         }
 
         function UpdateClock(convert) {
@@ -151,34 +164,52 @@
 
         datedata = window.dates;
 
-        function WhichScheduleToLoad(day = (dnow.getFullYear() + "-" + apz(dnow.getMonth() + 1) + "-" + apz(dnow.getDate())), future=false) {
+        function WhichScheduleToLoad(day = (dnow.getFullYear() + "-" + apz(dnow.getMonth() + 1) + "-" + apz(dnow.getDate())), tomorrow=false) {
             console.log(day)
             if (day in datedata) {
+                console.log("Custom schedule for this date exists.")
+                if(tomorrow === false) {
                 document.getElementById('howstheschedule').innerText = "Abnormal Schedule"
-                console.log("Date exists.")
-                if(future === false) {
                 window.theschedule = day
+                } else if(tomorrow === true) {
+                window.tomorrowschedule = day
                 }
                 return day
             } else {
-                console.log("Date does not exist.")
+                console.log("Custom schedule for this date does not exist.")
+                if(tomorrow === false) {
                 document.getElementById('howstheschedule').innerText = "Normal Schedule"
-                if(future === false) {
-                window.theschedule = dotw[dnow.getDay()]
+                window.theschedule = dotw[(new Date(day + "T00:00-08:00")).getDay()]
+                } else if(tomorrow === true) {
+                    window.tomorrowschedule = dotw[(new Date(day + "T00:00-08:00")).getDay()]
                 }
-                return dotw[dnow.getDay()]
+                return dotw[(new Date(day + "T00:00-08:00")).getDay()]
             }
+        }
+
+        function CustomScheduleExists(day) {
+            if (day in datedata) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        if(screen.width < 500) {
+            tinyscreen = true;
+            dashes = 0;
         }
 
         function UpdateTimer() {
             trigger = -1;
             var dnow = new Date();
             minutes = ((dnow.getSeconds() / 60) + dnow.getMinutes() + (dnow.getHours() * 60) + (dnow.getMilliseconds() / 60000))
-            for (i = 0; i < EventsToLoad; i++) {
-                document.getElementById('event_' + String(i)).innerHTML = "<b>" + datedata[theschedule][i]['name'] + "</b> in " + MakeFunTimestamps(datedata[theschedule][i]['timestamp'] - minutes);
-                if (datedata[theschedule][i]['timestamp'] - minutes < 0) {
+            for (i = start; i < EventsToLoad; i++) {
+                document.getElementById('event_' + String(i)).innerHTML = "<b>" + datedata[theschedule]['events'][i]['name'] + "</b> in " + MakeFunTimestamps(datedata[theschedule]['events'][i]['timestamp'] - minutes);
+                if (datedata[theschedule]['events'][i]['timestamp'] - minutes < 0) {
+                    start += 1;
                     document.getElementById('event_' + String(i)).style.display = "none";
-                    //console.log("hid element: " + datedata[theschedule][i]['timestamp'] + " was less than " + minutes)
+                    //console.log("hid element: " + datedata[theschedule]['events'][i]['timestamp'] + " was less than " + minutes)
                 } else {
                     if(trigger == -1) {
                     console.log('triggered thing - item #' + i + ' was visible!')
@@ -186,12 +217,34 @@
                     }
                 }
             }
-            document.getElementById('clock').innerText = UpdateClock(datedata[theschedule][trigger]['timestamp'] - minutes)
-            document.title = (UpdateClock(datedata[theschedule][trigger]['timestamp'] - minutes) + " | kehillah.today")
-            if(trigger <= 0) {
-            document.getElementById('whatsup').innerHTML = "⸻&emsp; FREE &emsp;⸻"
+            for (i = tomorrowstart; i < tomorrowEventsToLoad; i++) {
+                document.getElementById('tomorrow_' + String(i)).innerHTML = "<b>" + datedata[tomorrowschedule]['events'][i]['name'] + "</b> in " + MakeFunTimestamps(datedata[tomorrowschedule]['events'][i]['timestamp'] - minutes + 1440); //adjust number of minutes
+                if (datedata[tomorrowschedule]['events'][i]['timestamp'] - minutes < 0) {
+                    tomorrowstart += 1;
+                    document.getElementById('event_' + String(i)).style.display = "none";
+                    //console.log("hid element: " + datedata[tomorrowschedule]['events'][i]['timestamp'] + " was less than " + minutes)
+                } else {
+                    if(ftrigger == -1) {
+                    console.log('triggered thing - item #' + i + ' was visible!')
+                        ftrigger = i;
+                    }
+                }
+            }
+
+            if(start === EventsToLoad) {
+            document.getElementById('clock').innerText = "day over"
+            if(typeof noschool === 'undefined' || noschool == null || !noschool) {
+            document.getElementById('upcomingnotice').innerText = "No more events today."
+            }
+            document.getElementById('upcomingblock').style.display = "block"
             } else {
-            document.getElementById('whatsup').innerHTML = "⸻&emsp;" + datedata[theschedule][trigger - 1]['name'] + "&emsp;⸻"
+            document.getElementById('clock').innerText = UpdateClock(datedata[theschedule]['events'][trigger]['timestamp'] - minutes)
+            document.title = (UpdateClock(datedata[theschedule]['events'][trigger]['timestamp'] - minutes) + " | kehillah.today")
+            }
+            if(trigger <= 0) {
+            document.getElementById('whatsup').innerHTML = dasharray[dashes] + "&emsp; FREE &emsp;" + dasharray[dashes]
+            } else {
+            document.getElementById('whatsup').innerHTML = dasharray[dashes] + "&emsp;" + datedata[theschedule]['events'][trigger - 1]['name'] + "&emsp;" + dasharray[dashes]
             }
 
             if(!(pageloaddate == dnow.getDate())) {
@@ -200,55 +253,141 @@
         }
 
         function MakeEverything() {
-            correctjsondata = window.datedata[WhichScheduleToLoad()]
+            var noschool = false;
+            correctjsondata = window.datedata[WhichScheduleToLoad()]['events']
             correctjsondata.forEach(function(object) {
                 if(object.name) {
                     total = total + 1;
+                    console.log("found thing. total is now " + total)
+                }
+                if(object.name == 'No School') {
+                    console.log("NO SCHOOL TODAY")
+                    noschool = true
                 }
             })
 
-            if (!(datedata[theschedule][total] == undefined)) {
-                if("message" in datedata[theschedule][total]) {
-            document.getElementById('howstheschedule').innerText = datedata[theschedule][total]['message']
+            if (!(datedata[theschedule]['events'][total] == undefined)) {
+                if("message" in datedata[theschedule]['events'][total]) {
+            document.getElementById('howstheschedule').innerText = datedata[theschedule]['events'][total]['message']
             }
         }
 
             window.EventsToLoad = total;
             console.log("Loading events: " + window.EventsToLoad);
-            for (var i = 0; i < window.EventsToLoad; i += 1) { //Make HTML elements
+            for (var q = 0; q < window.EventsToLoad; q += 1) { //Make HTML elements
                 var div = document.createElement("div");
                 console.log("Made an element.");
-                div.id = ("event_" + i);
+                div.id = ("event_" + q);
                 div.innerHTML = ("Loading...");
                 div.style.padding = "15px";
                 div.style.backgroundColor = "#9590a5";
-                div.style.boxShadow = "0px 0px 0px 2px #eEF";  
+                div.style.boxShadow = "0px 0px 0px 2px #eef";  
                 div.style.textAlign = "left";
                 div.style.fontSize = "1.5em"
                 div.style.lineHeight = "100%"
-                div.style.background = getColor(datedata[theschedule][i]['name'])
-                document.body.appendChild(div);
+                console.log(q)
+                div.style.background = getColor(datedata[theschedule]['events'][q]['name'])
+                if(noschool) {
+                    div.style.display = "none";
+                    document.getElementById('upcomingblock').style.display = "block";
+                    document.getElementById('upcomingnotice').innerText = "No school today."
+                }
+                document.getElementById("today").appendChild(div);
+            }
+        }
+
+        function MakeTomorrow() {
+            var noschooltomorrow = false;
+            correctjsondata = window.datedata[WhichScheduleToLoad(findNextDay(), true)]['events']
+            console.log(correctjsondata)
+            correctjsondata.forEach(function(object) {
+                console.log(object)
+                if(object.name) {
+                    tomorrowtotal = tomorrowtotal + 1;
+                }
+                if(object.name == 'No School') {
+                    console.log("NO SCHOOL TOMORROW")
+                    noschooltomorrow = true
+                }
+            })
+
+            if (!(datedata[theschedule]['events'][tomorrowtotal] == undefined)) {
+                if("message" in datedata[theschedule]['events'][tomorrowtotal]) {
+            document.getElementById('howstheschedule').innerText = datedata[theschedule]['events'][tomorrowtotal]['message']
+            }
+        }
+            window.tomorrowEventsToLoad = tomorrowtotal;
+            console.log("Loading events: " + window.tomorrowEventsToLoad);
+            for (var i = 0; i < window.tomorrowEventsToLoad; i += 1) { //Make HTML elements
+                var div = document.createElement("div");
+                console.log("Made an element.");
+                div.id = ("tomorrow_" + i);
+                div.innerHTML = ("Loading...");
+                div.style.padding = "15px";
+                div.style.backgroundColor = "#9590a5";
+                div.style.boxShadow = "0px 0px 0px 2px #eef";  
+                div.style.textAlign = "left";
+                div.style.fontSize = "1.5em"
+                div.style.lineHeight = "100%"
+                div.style.background = getColor(datedata[tomorrowschedule]['events'][i]['name'])
+                if(noschooltomorrow) {
+                    div.style.display = "none";
+                    document.getElementById('tomorrowblock').style.display = "block";
+                    document.getElementById('tomorrownotice').innerText = "No school tomorrow."
+                }
+                document.getElementById("tomorrow").appendChild(div);
+            }
+        }
+
+        function searchFuture() {
+            for (b = 1; b < 300; b++) {
+                datesearch = new Date()
+                datesearch.setDate(dnow.getDate() + b)
+                scan = (datesearch.getFullYear() + "-" + apz(datesearch.getMonth() + 1) + "-" + apz(datesearch.getDate()))
+                if(CustomScheduleExists(scan)) {
+                    console.log(scan + " / " + datedata[scan]['message'])
+                }
             }
         }
 
         MakeEverything()
+        MakeTomorrow()
+        
 
-        setInterval(UpdateTimer, 64)
+        setInterval(UpdateTimer, 58)
     </script>
-    <br class="lines">
-    <p class="logo">
-        <span style="color: #414256">kehillah</span><span style="color: #9590a5">.</span><span
-            style="color: #3399cc">future</span>
-    </p>
-
-    <p id="credits" style="color:#aac; margin: 20px;" class="lines">
-    <span>Created by B. Gill.</span><br>
-    <span>Data sourced from the <a href="https://kehillah.org/wp-content/uploads/2022/08/MasterSchedule22_23.jpg" target="_blank" rel="noopener noreferrer"><span style="color: #aac">Kehillah master schedule</span></a>.</span><br>
-    <span><span style="font-family: Righteous">kehillah.today</span> is not affiliated with <a href="https://kehillah.org/" target="_blank" rel="noopener noreferrer"><span style="color: #aac">kehillah.org</span></a>.</span><br>
-    <span>Fonts used: <span style="font-family: Righteous">Righteous</span>, <span style="font-family: Bebas Neue">Bebas Neue</span>, and Barlow Semi Condensed.</span><br>
-    <span>v0.1 &mdash; 2022-08-18</span><br>
-    <span></p>
 
 </body>
+<style>
+    .display {
+        font-family: 'Bebas Neue';
+        margin: 40px;
+        text-align: center;
+        color: #335;
+        line-height: 0.6
 
+    }
+    .logo {
+        font-family: 'Righteous';
+        font-size: 30px;
+        margin: 20px;
+    }
+
+    a {
+        text-decoration: #aac underline;
+    }
+
+    p {
+        line-height: 0.4
+    }
+
+    .lines {
+        line-height: 1.5
+    }
+
+    body {
+        font-family: 'Barlow Semi Condensed';
+        font-variant-numeric: tabular-nums;
+    }
+</style>
 </html>
