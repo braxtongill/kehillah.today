@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Kehillah's Bell Schedule | kehillah.today</title>
+    <title>Kehillah's Beta Schedule | kehillah.today</title>
     <meta name="description" content="kehillah.today keeps track of Kehillah's mildly frustrating bell schedule so that you don't have to.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
@@ -17,17 +17,16 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Righteous&family=Barlow+Semi+Condensed&display=swap" rel="stylesheet" />
-    <title>kehillah.today BETA</title>
-    <script src="../dates.js?v=0"></script>
+    <title>kehillah.today</title>
+    <script src="dates.js?v=0"></script>
     <meta name="description" content="" />
 </head>
 
 <body style="background-color:#eef" class="unselectable">
     <p class="logo">
         <span style="color: #414256">kehillah</span><span style="color: #9590a5">.</span><span
-            style="color: #cc3333">BETA</span>
+            style="color: #cc3333">today</span>
     </p>
-    <span>You shouldn't be here! Go back to <a href="https://kehillah.today">kehillah.today</a> by clicking here.
 
     <p style="margin: 0px 0px 0px 20px">
         <i><span style="color: #414256"><span id="todayis"><noscript>JavaScript is disabled. This website will not function until you enable it.</noscript></span><span id="howstheschedule"></span></i>
@@ -99,8 +98,7 @@
     <span>Data sourced from the <a href="https://kehillah.org/wp-content/uploads/2022/08/MasterSchedule22_23.jpg" target="_blank" rel="noopener noreferrer"><span style="color: #aac">Kehillah master schedule</span></a>.</span><br>
     <span><span style="font-family: Righteous">kehillah.today</span> is not affiliated with <a href="https://kehillah.org/" target="_blank" rel="noopener noreferrer"><span style="color: #aac">kehillah.org</span></a>.</span><br>
     <span>Fonts used: <span style="font-family: Righteous">Righteous</span>, <span style="font-family: Bebas Neue">Bebas Neue</span>, and Barlow Semi Condensed.</span><br>
-    <span>This website uses first-party cookies to save your chosen classes.</span><br>
-    <span id="version">vBETA0.4.3 &mdash; August 24, 2022</span><br>
+    <span id="version">v0.4.5 &mdash; August 24, 2022</span><br>
     <span></p>
     <script>
         minutes = 0;
@@ -138,6 +136,10 @@
         function apz(num) { /*add prefix zero*/
           return (num < 10 ? '0' : '') + num;
         };
+
+        function removeBrokenCharacters(string) {
+            return (string.replace(/[;\,]/g, ''))
+        }
 
         function ChangeClasses() {
             if(!istheClassNameformvisible) {
@@ -180,16 +182,19 @@
         function makeCookies() {
             cookiejar = []
             for(i = 0; i < 10; i++) {
-            console.log(document.getElementsByClassName('classinput')[i].value);
-            cookiejar.push(document.getElementsByClassName('classinput')[i].value)
+            console.log(removeBrokenCharacters(document.getElementsByClassName('classinput')[i].value));
+            cookiejar.push(removeBrokenCharacters(document.getElementsByClassName('classinput')[i].value))  
             }
-            document.cookie = "classes:" + cookiejar.toString() + "; max-age=31536000";
+            localStorage.setItem("classes", cookiejar.toString());
             location.reload()
         }
 
         function cookieToClasses() {
-            console.log(document.cookie)
-            var magic = (document.cookie.split(","));
+            if(localStorage.getItem('classes') == null) {
+                localStorage.setItem('classes', regularnamesforevents.toString());
+            }
+            console.log(localStorage.getItem('classes'))
+            var magic = (localStorage.getItem('classes').split(","));
             for(i = 0; i < 10; i++) {
             if(i == 0) { 
             console.log((magic[i]).slice(8))
@@ -343,7 +348,7 @@
             if(trigger <= 0) {
             document.getElementById('whatsup').innerHTML = dasharray[dashes] + "&emsp; FREE &emsp;" + dasharray[dashes]
             } else {
-            document.getElementById('whatsup').innerHTML = document.cookie
+            document.getElementById('whatsup').innerHTML = dasharray[dashes] + "&emsp;" + CustomEventName(datedata[theschedule]['events'][trigger - 1]['name']) + "&emsp;" + dasharray[dashes]
             }
 
             if(!(pageloaddate == dnow.getDate())) {
