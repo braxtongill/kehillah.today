@@ -99,7 +99,7 @@
     <span><span style="font-family: Righteous">kehillah.today</span> is not affiliated with <a href="https://kehillah.org/" target="_blank" rel="noopener noreferrer"><span style="color: #aac">kehillah.org</span></a>.</span><br>
     <span>Fonts used: <span style="font-family: Righteous">Righteous</span>, <span style="font-family: Bebas Neue">Bebas Neue</span>, and Barlow Semi Condensed.</span><br>
     <span>This website uses first-party cookies to save your chosen classes.</span><br>
-    <span id="version">v0.4.2 &mdash; August 24, 2022</span><br>
+    <span id="version">v0.4.3 &mdash; August 24, 2022</span><br>
     <span></p>
     <script>
         minutes = 0;
@@ -181,9 +181,9 @@
             for(i = 0; i < 10; i++) {
             console.log(document.getElementsByClassName('classinput')[i].value);
             cookiejar.push(document.getElementsByClassName('classinput')[i].value)
+            }
             document.cookie = "classes:" + cookiejar.toString() + "; max-age=31536000";
             location.reload()
-            }
         }
 
         function cookieToClasses() {
@@ -342,7 +342,7 @@
             if(trigger <= 0) {
             document.getElementById('whatsup').innerHTML = dasharray[dashes] + "&emsp; FREE &emsp;" + dasharray[dashes]
             } else {
-            document.getElementById('whatsup').innerHTML = dasharray[dashes] + "&emsp;" + datedata[theschedule]['events'][trigger - 1]['name'] + "&emsp;" + dasharray[dashes]
+            document.getElementById('whatsup').innerHTML = dasharray[dashes] + "&emsp;" + CustomEventName(datedata[theschedule]['events'][trigger - 1]['name']) + "&emsp;" + dasharray[dashes]
             }
 
             if(!(pageloaddate == dnow.getDate())) {
@@ -456,10 +456,10 @@
 <style>
     .display {
         font-family: 'Bebas Neue';
-        margin: 40px;
+        margin: 10px 40px 10px 40px;
         text-align: center;
         color: #335;
-        line-height: 0.6
+        line-height: 1
 
     }
 
@@ -529,6 +529,7 @@
     }
 
     .classsubmit {
+        -webkit-appearance: none;
         background-color: #eef;
         font-family: 'Barlow Semi Condensed';
         font-variant-numeric: tabular-nums;
