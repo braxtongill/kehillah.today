@@ -31,8 +31,8 @@
     </p>
 
 
-    <p class="display" style="font-size:40px" id="whatsup"></p>
-    <p class="display" style="font-size:150px;" id="clock"></p>
+    <p class="display above-clock" id="whatsup"></p>
+    <p class="display clock" id="clock"></p>
     
 
     <p class="logo" >
@@ -67,7 +67,7 @@
     <span>Data sourced from the <a href="https://kehillah.org/wp-content/uploads/2022/08/MasterSchedule22_23.jpg" target="_blank" rel="noopener noreferrer"><span style="color: #aac">Kehillah master schedule</span></a>.</span><br>
     <span><span style="font-family: Righteous">kehillah.today</span> is not affiliated with <a href="https://kehillah.org/" target="_blank" rel="noopener noreferrer"><span style="color: #aac">kehillah.org</span></a>.</span><br>
     <span>Fonts used: <span style="font-family: Righteous">Righteous</span>, <span style="font-family: Bebas Neue">Bebas Neue</span>, and Barlow Semi Condensed.</span><br>
-    <span>v0.3.1 &mdash; August 23, 2022</span><br>
+    <span>v0.3.2 &mdash; August 23, 2022</span><br>
     <span></p>
     <script>
         minutes = 0;
@@ -381,6 +381,15 @@
         line-height: 0.6
 
     }
+
+    .clock {
+        font-size: 150px;
+    }
+
+    .above-clock {
+        font-size: 40px
+    }
+
     .logo {
         font-family: 'Righteous';
         font-size: 30px;
@@ -407,6 +416,12 @@
     body {
         font-family: 'Barlow Semi Condensed';
         font-variant-numeric: tabular-nums;
+    }
+
+    @media (max-width: 768px) {
+        .clock {
+        font-size: 100px;
+        }
     }
 </style>
 </html>
