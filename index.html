@@ -28,7 +28,7 @@
             style="color: #cc3333">today</span>
     </p>
 
-    <p style="margin: 20px">
+    <p style="margin: 0px 0px 0px 20px">
         <i><span style="color: #414256"><span id="todayis"><noscript>JavaScript is disabled. This website will not function until you enable it.</noscript></span><span id="howstheschedule"></span></i>
     </p>
 
@@ -99,7 +99,7 @@
     <span><span style="font-family: Righteous">kehillah.today</span> is not affiliated with <a href="https://kehillah.org/" target="_blank" rel="noopener noreferrer"><span style="color: #aac">kehillah.org</span></a>.</span><br>
     <span>Fonts used: <span style="font-family: Righteous">Righteous</span>, <span style="font-family: Bebas Neue">Bebas Neue</span>, and Barlow Semi Condensed.</span><br>
     <span>This website uses first-party cookies to save your chosen classes.</span><br>
-    <span id="version">v0.4.1 &mdash; August 23, 2022</span><br>
+    <span id="version">v0.4.2 &mdash; August 24, 2022</span><br>
     <span></p>
     <script>
         minutes = 0;
@@ -111,7 +111,7 @@
         var ftrigger = -1;
         var theschedule = ""
         var tomorrowschedule = ""
-        var blockcolors = ["#c6c6d6","#6ec0d6","#8d7cc2","#c17ba0","#e06665","#2aa3ac","#d64087","#b4a7d5","#9fc5e9","#d6a6be","#aaccaa"] /* #0 is misc, 1-9 are blocks, 10 is lunch */
+        var blockcolors = ["#c6c6d6","#6ec0d6","#8d7cc2","#c17ba0","#e06665","#2aa3ac","#d64087","#b4a7d5","#9fc5e9","#d6a6be","#aaccaa","#c9ccaa"] /* #0 is misc, 1-9 are blocks, 10 is lunch, 11 is RP */
         var correctjsondata = ""
         var total = 0
         var tomorrowtotal = 0
@@ -215,6 +215,8 @@
                 return blockcolors[id.slice(-1)];
             } else if(id.startsWith("Lunch")) {
                 return blockcolors[10];
+            } else if(id.startsWith("Reflective")) {
+                return blockcolors[11];
             } else {
                 return blockcolors[0];
             }
