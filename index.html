@@ -57,17 +57,47 @@
     
     <br class="small">
 
-    <p class="logo">
+    <p class="logo" style="display: none">
         <span style="color: #414256">kehillah</span><span style="color: #9590a5">.</span><span
             style="color: #9933cc">future</span>
     </p>
+
+    <p><button class="button" onclick="ChangeClasses()">
+        Customize Classes
+    </button></p>
+
+    <form onsubmit="return false;" method="post" id="ClassForm" style="margin: 20px; display: none">
+        <label for="classBlock1">Block 1</label>
+        <input type="text" class="classinput" id="classBlock1" placeholder="Block 1"><br>
+        <label for="classBlock2">Block 2</label>
+        <input type="text" class="classinput" id="classBlock2" placeholder="Block 2"><br>
+        <label for="classBlock3">Block 3</label>
+        <input type="text" class="classinput" id="classBlock3" placeholder="Block 3"><br>
+        <label for="classBlock4">Block 4</label>
+        <input type="text" class="classinput" id="classBlock4" placeholder="Block 4"><br>
+        <label for="classBlock5">Block 5</label>
+        <input type="text" class="classinput" id="classBlock5" placeholder="Block 5"><br>
+        <label for="classBlock6">Block 6</label>
+        <input type="text" class="classinput" id="classBlock6" placeholder="Block 6"><br>
+        <label for="classBlock7">Block 7</label>
+        <input type="text" class="classinput" id="classBlock7" placeholder="Block 7"><br>
+        <label for="classBlock8">Block 8</label>
+        <input type="text" class="classinput" id="classBlock8" placeholder="Block 8"><br>
+        <label for="classBlock9">Block 9</label>
+        <input type="text" class="classinput" id="classBlock9" placeholder="Block 9"><br>
+        <label for="classReflectivePractice">Reflective Practice</label>
+        <input type="text" class="classinput" id="classReflectivePractice" placeholder="Reflective Practice">
+<br><br>
+        <input type="submit" onclick="return makeCookies()" class="classsubmit">
+    </form>
 
     <p id="credits" style="color:#aac; margin: 20px;" class="lines">
     <span>Created by B. Gill.</span><br>
     <span>Data sourced from the <a href="https://kehillah.org/wp-content/uploads/2022/08/MasterSchedule22_23.jpg" target="_blank" rel="noopener noreferrer"><span style="color: #aac">Kehillah master schedule</span></a>.</span><br>
     <span><span style="font-family: Righteous">kehillah.today</span> is not affiliated with <a href="https://kehillah.org/" target="_blank" rel="noopener noreferrer"><span style="color: #aac">kehillah.org</span></a>.</span><br>
     <span>Fonts used: <span style="font-family: Righteous">Righteous</span>, <span style="font-family: Bebas Neue">Bebas Neue</span>, and Barlow Semi Condensed.</span><br>
-    <span>v0.3.2 &mdash; August 23, 2022</span><br>
+    <span>This website uses first-party cookies to save your chosen classes.</span><br>
+    <span>v0.4 &mdash; August 23, 2022</span><br>
     <span></p>
     <script>
         minutes = 0;
@@ -95,12 +125,26 @@
         var noschooltomorrow = false;
 
         var nexteventtime = 0;
+        var cookiejar = []
+        var istheClassNameformvisible = false;
+        var customnamesforevents = []
+        var regularnamesforevents = ["Block 1","Block 2","Block 3","Block 4","Block 5","Block 6","Block 7","Block 8","Block 9","Reflective Practice"]
 
         document.getElementById('todayis').innerText = fulldotw[dnow.getDay()] + ", " + fullmoty[dnow.getMonth()] + " " + dnow.getDate() + " · " //updates 
 
         function apz(num) { /*add prefix zero*/
           return (num < 10 ? '0' : '') + num;
         };
+
+        function ChangeClasses() {
+            if(!istheClassNameformvisible) {
+                document.getElementById('ClassForm').style.display = "block"
+                istheClassNameformvisible = true;
+            } else {
+                document.getElementById('ClassForm').style.display = "none"
+                istheClassNameformvisible = false;
+            }
+        }
 
         function toUnix(timestamp) {
             minsunix = Date.now() + (timestamp * 60000)
@@ -128,6 +172,39 @@
             }
 
             return convertible;
+        }
+
+        function makeCookies() {
+            cookiejar = []
+            for(i = 0; i < 10; i++) {
+            console.log(document.getElementsByClassName('classinput')[i].value);
+            cookiejar.push(document.getElementsByClassName('classinput')[i].value)
+            document.cookie = "classes:" + cookiejar.toString() + "; max-age=31536000";
+            location.reload()
+            }
+        }
+
+        function cookieToClasses() {
+            console.log(document.cookie)
+            var magic = (document.cookie.split(","));
+            for(i = 0; i < 10; i++) {
+            if(i == 0) { 
+            console.log((magic[i]).slice(8))
+            customnamesforevents.push(magic[i].slice(8))
+            } else {
+            console.log(magic[i])
+            customnamesforevents.push(magic[i])
+            }
+            }
+        }
+        cookieToClasses()
+
+        function CustomEventName(name) {
+            if(customnamesforevents[regularnamesforevents.indexOf(name)] == '' || customnamesforevents[regularnamesforevents.indexOf(name)] == undefined) {
+                return name;
+            } else {
+                return "<i>" + customnamesforevents[regularnamesforevents.indexOf(name)] + "</i>"
+            }
         }
 
         function getColor(id) {
@@ -225,7 +302,7 @@
             var dnow = new Date();
             minutes = ((dnow.getSeconds() / 60) + dnow.getMinutes() + (dnow.getHours() * 60) + (dnow.getMilliseconds() / 60000))
             for (i = start; i < EventsToLoad; i++) {
-                document.getElementById('event_' + String(i)).innerHTML = "<b>" + datedata[theschedule]['events'][i]['name'] + "</b> at " + toUnix(datedata[theschedule]['events'][i]['timestamp'] - minutes) + " (" + MakeFunTimestamps(datedata[theschedule]['events'][i]['timestamp'] - minutes) + ")";
+                document.getElementById('event_' + String(i)).innerHTML = "<b>" + CustomEventName(datedata[theschedule]['events'][i]['name']) + "</b> at " + toUnix(datedata[theschedule]['events'][i]['timestamp'] - minutes) + " (" + MakeFunTimestamps(datedata[theschedule]['events'][i]['timestamp'] - minutes) + ")";
                 if (datedata[theschedule]['events'][i]['timestamp'] - minutes < 0) {
                     start += 1;
                     document.getElementById('event_' + String(i)).style.display = "none";
@@ -238,7 +315,7 @@
                 }
             }
             for (i = tomorrowstart; i < tomorrowEventsToLoad; i++) {
-                document.getElementById('tomorrow_' + String(i)).innerHTML = ("<b>" + datedata[tomorrowschedule]['events'][i]['name'] + "</b> at " + toUnix(datedata[tomorrowschedule]['events'][i]['timestamp'] - minutes + 1440) + " (" + MakeFunTimestamps(datedata[tomorrowschedule]['events'][i]['timestamp'] - minutes + 1440) + ")"); //adjust number of minutes
+                document.getElementById('tomorrow_' + String(i)).innerHTML = ("<b>" + CustomEventName(datedata[tomorrowschedule]['events'][i]['name']) + "</b> at " + toUnix(datedata[tomorrowschedule]['events'][i]['timestamp'] - minutes + 1440) + " (" + MakeFunTimestamps(datedata[tomorrowschedule]['events'][i]['timestamp'] - minutes + 1440) + ")"); //adjust number of minutes
                     if(ftrigger == -1) {
                     console.log('triggered thing - item #' + i + ' was visible!')
                         ftrigger = i;
@@ -416,6 +493,62 @@
     body {
         font-family: 'Barlow Semi Condensed';
         font-variant-numeric: tabular-nums;
+    }
+
+    .button {
+        all: unset;
+        border: none;
+        text-align: center;
+        background-color: #aac;
+        font-size: 18px;
+        margin: 20px;
+        padding: 10px 24px;
+        border-radius: 4px;
+        transition-duration: 0.2s;
+    }
+
+    .button:hover {
+        background-color: #cce
+    }
+
+    .classinput {
+        background-color: #eef;
+        font-family: 'Barlow Semi Condensed';
+        font-variant-numeric: tabular-nums;
+        font-size: 18px;
+        border: 2px solid #cce;
+        margin: 3px;
+    }
+
+    label {
+        font-size: 18px
+    }
+
+    .classsubmit {
+        background-color: #eef;
+        font-family: 'Barlow Semi Condensed';
+        font-variant-numeric: tabular-nums;
+        font-size: 18px;
+        border: 2px solid #202026;
+        transition-duration: 0.2s;
+        font-weight: bold;
+        width: 25%;
+    }
+
+    .classsubmit:hover {
+        background-color: #202026;
+        color: #eef;
+    }
+
+    .classinput:focus {
+        outline: none;
+        box-shadow: 0 0 10px #9696b5;
+        font-weight: bold;
+    }
+
+    ::placeholder {
+        color: #babad9;
+        opacity: 1;
     }
 
     @media (max-width: 768px) {
