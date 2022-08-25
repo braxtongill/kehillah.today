@@ -2,23 +2,23 @@
 <html>
 
 <head>
-    <title>Kehillah's Beta Schedule | kehillah.today</title>
+    <title>Kehillah's Bell Schedule | kehillah.today</title>
     <meta name="description" content="kehillah.today keeps track of Kehillah's mildly frustrating bell schedule so that you don't have to.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js"></script>
-    <link rel="apple-touch-icon" sizes="180x180" href="../favicon/apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="../favicon/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="../favicon/favicon-16x16.png" />
-    <link rel="manifest" href="../favicon/site.webmanifest" />
-    <link rel="shortcut icon" type="image/x-icon" href="../favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png" />
+    <link rel="manifest" href="favicon/site.webmanifest" />
+    <link rel="shortcut icon" type="image/x-icon" href="favicon/favicon.ico" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Righteous&family=Barlow+Semi+Condensed&display=swap" rel="stylesheet" />
     <title>kehillah.today</title>
-    <script src="../dates.js?v=0"></script>
+    <script src="dates.js?v=0"></script>
     <meta name="description" content="" />
 </head>
 
@@ -65,7 +65,7 @@
     </p>
 
     <p><button class="button" onclick="ChangeClasses()">
-        Customize Classes
+        Rename Blocks
     </button></p>
 
     <form onsubmit="return false;" method="post" id="ClassForm" style="margin: 20px; display: none">
@@ -94,11 +94,11 @@
     </form>
 
     <p id="credits" style="color:#aac; margin: 20px;" class="lines">
-    <span>Created by B. Gill.</span><br>
+    <span>Created by B. Gill. Contact me at <a href="mailto: bgill2023@kehillahstudent.org"><span style="color: #aac">bgill2023@kehillahstudent.org</span></a>.</span><br>
     <span>Data sourced from the <a href="https://kehillah.org/wp-content/uploads/2022/08/MasterSchedule22_23.jpg" target="_blank" rel="noopener noreferrer"><span style="color: #aac">Kehillah master schedule</span></a>.</span><br>
     <span><span style="font-family: Righteous">kehillah.today</span> is not affiliated with <a href="https://kehillah.org/" target="_blank" rel="noopener noreferrer"><span style="color: #aac">kehillah.org</span></a>.</span><br>
     <span>Fonts used: <span style="font-family: Righteous">Righteous</span>, <span style="font-family: Bebas Neue">Bebas Neue</span>, and Barlow Semi Condensed.</span><br>
-    <span id="version">v0.4.5 &mdash; August 24, 2022</span><br>
+    <span id="version">v0.4.6b &mdash; August 24, 2022</span><br>
     <span></p>
     <script>
         minutes = 0;
@@ -179,7 +179,7 @@
             return convertible;
         }
 
-        function makeCookies() {
+        function makeCookies() { //they're called "cookies" because i used cookies before localStorage, but that didn't work on safari. i keep it here because "storageJar" sounds really lame. besides, why are you even looking through this code? did something break??
             cookiejar = []
             for(i = 0; i < 10; i++) {
             console.log(removeBrokenCharacters(document.getElementsByClassName('classinput')[i].value));
@@ -208,7 +208,7 @@
         cookieToClasses()
 
         function CustomEventName(name) {
-            if(customnamesforevents[regularnamesforevents.indexOf(name)] == '' || customnamesforevents[regularnamesforevents.indexOf(name)] == undefined) {
+            if(customnamesforevents[regularnamesforevents.indexOf(name)] == '' || customnamesforevents[regularnamesforevents.indexOf(name)] == undefined || name == customnamesforevents[regularnamesforevents.indexOf(name)]) {
                 return name;
             } else {
                 return "<i>" + customnamesforevents[regularnamesforevents.indexOf(name)] + "</i>"
