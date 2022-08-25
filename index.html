@@ -3,7 +3,13 @@
 
 <head>
     <title>Kehillah's Bell Schedule | kehillah.today</title>
+    <meta name="title" content="Kehillah's Bell Schedule | kehillah.today">
     <meta name="description" content="kehillah.today keeps track of Kehillah's mildly frustrating bell schedule so that you don't have to.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kehillah.today/">
+    <meta property="og:title" content="Kehillah's Bell Schedule | kehillah.today">
+    <meta property="og:description" content="kehillah.today keeps track of Kehillah's mildly frustrating bell schedule so that you don't have to.">
+    <meta property="og:image" content="https://metatags.io/assets/meta-tags-16a33a6a8531e519cc0936fbba0ad904e52d35f34a46c97a2c9f6f7dd7d336f2.png">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
@@ -98,7 +104,7 @@
     <span>Data sourced from the <a href="https://kehillah.org/wp-content/uploads/2022/08/MasterSchedule22_23.jpg" target="_blank" rel="noopener noreferrer"><span style="color: #aac">Kehillah master schedule</span></a>.</span><br>
     <span><span style="font-family: Righteous">kehillah.today</span> is not affiliated with <a href="https://kehillah.org/" target="_blank" rel="noopener noreferrer"><span style="color: #aac">kehillah.org</span></a>.</span><br>
     <span>Fonts used: <span style="font-family: Righteous">Righteous</span>, <span style="font-family: Bebas Neue">Bebas Neue</span>, and Barlow Semi Condensed.</span><br>
-    <span id="version">v0.4.7a &mdash; August 24, 2022</span><br>
+    <span id="version">v0.4.8 &mdash; August 25, 2022</span><br>
     <span></p>
     <script>
         minutes = 0;
@@ -195,17 +201,14 @@
             }
             console.log(localStorage.getItem('classes'))
             var magic = (localStorage.getItem('classes').split(","));
+            console.log(magic)
+            console.log("^^")
             for(i = 0; i < 10; i++) {
             if(!(magic[i] == regularnamesforevents[i])) {
             document.getElementById("class" + regularnamesforevents[i].replace(/\s/g, '')).value = magic[i]
             }
-            if(i == 0) { 
-            console.log((magic[i]).slice(8))
-            customnamesforevents.push(magic[i].slice(8))
-            } else {
             console.log(magic[i])
             customnamesforevents.push(magic[i])
-            }
             }
         }
         cookieToClasses()
@@ -305,7 +308,12 @@
                 day.setDate(dnow.getDate() + search)
                 var dateset = (WhichScheduleToLoad(day.getFullYear() + "-" + apz(day.getMonth() + 1) + "-" + apz(day.getDate())))
                 if(!(datedata[dateset]['events'][0]['name'] == "No School")) {
-                    return (1440 * (search) + datedata[dateset]['events'][0]['timestamp'] - minutes)
+                    for(s = 0; s < 20; s++) {
+                    if(!(CustomEventName(datedata[dateset]['events'][s]['name']) == "Free") && !(CustomEventName(datedata[dateset]['events'][s]['name']) == "<i>Free</i>")) {
+                        console.log('returned with s= ' + s + "; " + datedata[dateset]['events'][s]['name'])
+                    return (1440 * (search) + datedata[dateset]['events'][s]['timestamp'] - minutes)
+                    }
+                    }
                 }
             }
         }
