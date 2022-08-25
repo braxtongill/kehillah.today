@@ -2,23 +2,23 @@
 <html>
 
 <head>
-    <title>Kehillah's Bell Schedule | kehillah.today</title>
+    <title>Kehillah's Beta Schedule | kehillah.today</title>
     <meta name="description" content="kehillah.today keeps track of Kehillah's mildly frustrating bell schedule so that you don't have to.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js"></script>
-    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png" />
-    <link rel="manifest" href="favicon/site.webmanifest" />
-    <link rel="shortcut icon" type="image/x-icon" href="favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../favicon/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="../favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="../favicon/favicon-16x16.png" />
+    <link rel="manifest" href="../favicon/site.webmanifest" />
+    <link rel="shortcut icon" type="image/x-icon" href="../favicon/favicon.ico" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Righteous&family=Barlow+Semi+Condensed&display=swap" rel="stylesheet" />
     <title>kehillah.today</title>
-    <script src="dates.js?v=0"></script>
+    <script src="../dates.js?v=0"></script>
     <meta name="description" content="" />
 </head>
 
@@ -98,7 +98,6 @@
     <span>Data sourced from the <a href="https://kehillah.org/wp-content/uploads/2022/08/MasterSchedule22_23.jpg" target="_blank" rel="noopener noreferrer"><span style="color: #aac">Kehillah master schedule</span></a>.</span><br>
     <span><span style="font-family: Righteous">kehillah.today</span> is not affiliated with <a href="https://kehillah.org/" target="_blank" rel="noopener noreferrer"><span style="color: #aac">kehillah.org</span></a>.</span><br>
     <span>Fonts used: <span style="font-family: Righteous">Righteous</span>, <span style="font-family: Bebas Neue">Bebas Neue</span>, and Barlow Semi Condensed.</span><br>
-    <span>This website uses first-party cookies to save your chosen classes.</span><br>
     <span id="version">v0.4.5 &mdash; August 24, 2022</span><br>
     <span></p>
     <script>
@@ -186,13 +185,16 @@
             console.log(removeBrokenCharacters(document.getElementsByClassName('classinput')[i].value));
             cookiejar.push(removeBrokenCharacters(document.getElementsByClassName('classinput')[i].value))  
             }
-            document.cookie = "classes:" + cookiejar.toString() + "; max-age=31536000";
+            localStorage.setItem("classes", cookiejar.toString());
             location.reload()
         }
 
         function cookieToClasses() {
-            console.log(document.cookie)
-            var magic = (document.cookie.split(","));
+            if(localStorage.getItem('classes') == null) {
+                localStorage.setItem('classes', regularnamesforevents.toString());
+            }
+            console.log(localStorage.getItem('classes'))
+            var magic = (localStorage.getItem('classes').split(","));
             for(i = 0; i < 10; i++) {
             if(i == 0) { 
             console.log((magic[i]).slice(8))
