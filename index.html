@@ -90,7 +90,7 @@
         <label for="classReflectivePractice" id="labelReflectivePractice">Reflective Practice</label>
         <input type="text" class="classinput" id="classReflectivePractice" placeholder="Reflective Practice">
 <br><br>
-        <input type="submit" onclick="return makeCookies()" class="classsubmit">
+        <input type="submit" onclick="return makeCookies()" class="classsubmit" value="Update">
     </form>
 
     <p id="credits" style="color:#aac; margin: 20px;" class="lines">
@@ -98,7 +98,7 @@
     <span>Data sourced from the <a href="https://kehillah.org/wp-content/uploads/2022/08/MasterSchedule22_23.jpg" target="_blank" rel="noopener noreferrer"><span style="color: #aac">Kehillah master schedule</span></a>.</span><br>
     <span><span style="font-family: Righteous">kehillah.today</span> is not affiliated with <a href="https://kehillah.org/" target="_blank" rel="noopener noreferrer"><span style="color: #aac">kehillah.org</span></a>.</span><br>
     <span>Fonts used: <span style="font-family: Righteous">Righteous</span>, <span style="font-family: Bebas Neue">Bebas Neue</span>, and Barlow Semi Condensed.</span><br>
-    <span id="version">v0.4.7 &mdash; August 24, 2022</span><br>
+    <span id="version">v0.4.7a &mdash; August 24, 2022</span><br>
     <span></p>
     <script>
         minutes = 0;
@@ -196,7 +196,9 @@
             console.log(localStorage.getItem('classes'))
             var magic = (localStorage.getItem('classes').split(","));
             for(i = 0; i < 10; i++) {
+            if(!(magic[i] == regularnamesforevents[i])) {
             document.getElementById("class" + regularnamesforevents[i].replace(/\s/g, '')).value = magic[i]
+            }
             if(i == 0) { 
             console.log((magic[i]).slice(8))
             customnamesforevents.push(magic[i].slice(8))
