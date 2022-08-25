@@ -69,25 +69,25 @@
     </button></p>
 
     <form onsubmit="return false;" method="post" id="ClassForm" style="margin: 20px; display: none">
-        <label for="classBlock1">Block 1</label>
+        <label for="classBlock1" id="labelBlock1">Block 1</label>
         <input type="text" class="classinput" id="classBlock1" placeholder="Block 1"><br>
-        <label for="classBlock2">Block 2</label>
+        <label for="classBlock2" id="labelBlock2">Block 2</label>
         <input type="text" class="classinput" id="classBlock2" placeholder="Block 2"><br>
-        <label for="classBlock3">Block 3</label>
+        <label for="classBlock3" id="labelBlock3">Block 3</label>
         <input type="text" class="classinput" id="classBlock3" placeholder="Block 3"><br>
-        <label for="classBlock4">Block 4</label>
+        <label for="classBlock4" id="labelBlock4">Block 4</label>
         <input type="text" class="classinput" id="classBlock4" placeholder="Block 4"><br>
-        <label for="classBlock5">Block 5</label>
+        <label for="classBlock5" id="labelBlock5">Block 5</label>
         <input type="text" class="classinput" id="classBlock5" placeholder="Block 5"><br>
-        <label for="classBlock6">Block 6</label>
+        <label for="classBlock6" id="labelBlock6">Block 6</label>
         <input type="text" class="classinput" id="classBlock6" placeholder="Block 6"><br>
-        <label for="classBlock7">Block 7</label>
+        <label for="classBlock7" id="labelBlock7">Block 7</label>
         <input type="text" class="classinput" id="classBlock7" placeholder="Block 7"><br>
-        <label for="classBlock8">Block 8</label>
+        <label for="classBlock8" id="labelBlock8">Block 8</label>
         <input type="text" class="classinput" id="classBlock8" placeholder="Block 8"><br>
-        <label for="classBlock9">Block 9</label>
+        <label for="classBlock9" id="labelBlock9">Block 9</label>
         <input type="text" class="classinput" id="classBlock9" placeholder="Block 9"><br>
-        <label for="classReflectivePractice">Reflective Practice</label>
+        <label for="classReflectivePractice" id="labelReflectivePractice">Reflective Practice</label>
         <input type="text" class="classinput" id="classReflectivePractice" placeholder="Reflective Practice">
 <br><br>
         <input type="submit" onclick="return makeCookies()" class="classsubmit">
@@ -98,7 +98,7 @@
     <span>Data sourced from the <a href="https://kehillah.org/wp-content/uploads/2022/08/MasterSchedule22_23.jpg" target="_blank" rel="noopener noreferrer"><span style="color: #aac">Kehillah master schedule</span></a>.</span><br>
     <span><span style="font-family: Righteous">kehillah.today</span> is not affiliated with <a href="https://kehillah.org/" target="_blank" rel="noopener noreferrer"><span style="color: #aac">kehillah.org</span></a>.</span><br>
     <span>Fonts used: <span style="font-family: Righteous">Righteous</span>, <span style="font-family: Bebas Neue">Bebas Neue</span>, and Barlow Semi Condensed.</span><br>
-    <span id="version">v0.4.6b &mdash; August 24, 2022</span><br>
+    <span id="version">v0.4.7 &mdash; August 24, 2022</span><br>
     <span></p>
     <script>
         minutes = 0;
@@ -196,6 +196,7 @@
             console.log(localStorage.getItem('classes'))
             var magic = (localStorage.getItem('classes').split(","));
             for(i = 0; i < 10; i++) {
+            document.getElementById("class" + regularnamesforevents[i].replace(/\s/g, '')).value = magic[i]
             if(i == 0) { 
             console.log((magic[i]).slice(8))
             customnamesforevents.push(magic[i].slice(8))
