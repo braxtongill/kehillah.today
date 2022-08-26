@@ -30,8 +30,8 @@
     <meta name="description" content="" />
 </head>
 
-<body style="background-color:#eef" class="unselectable" onClick="easterEgg()">
-    <p class="logo" style="margin: 20px 0px 5px 20px">
+<body style="background-color:#eef" class="unselectable">
+    <p class="logo" style="margin: 20px 0px 5px 20px; cursor: pointer" onClick="easterEgg()">
         <span style="color: #414256">kehillah</span><span style="color: #9590a5">.</span><span
             style="color: #cc3333">today</span>
     </p>
@@ -106,7 +106,7 @@
     <span>Data sourced from the <a href="https://kehillah.org/wp-content/uploads/2022/08/MasterSchedule22_23.jpg" target="_blank" rel="noopener noreferrer"><span style="color: #aac">Kehillah master schedule</span></a>.</span><br>
     <span><span style="font-family: Righteous">kehillah.today</span> is not affiliated with <a href="https://kehillah.org/" target="_blank" rel="noopener noreferrer"><span style="color: #aac">kehillah.org</span></a>.</span><br>
     <span>Fonts used: <span style="font-family: Righteous">Righteous</span>, <span style="font-family: Bebas Neue">Bebas Neue</span>, and Barlow Semi Condensed.</span><br>
-    <span id="version">v0.4.8a &mdash; August 25, 2022</span><br>
+    <span id="version">v0.4.8b &mdash; August 26, 2022</span><br>
     <span></p>
     <script>
         minutes = 0;
@@ -118,7 +118,7 @@
         var ftrigger = -1;
         var theschedule = ""
         var tomorrowschedule = ""
-        var blockcolors = ["#c6c6d6","#6ec0d6","#8d7cc2","#c17ba0","#e06665","#2aa3ac","#d64087","#b4a7d5","#9fc5e9","#d6a6be","#aaccaa","#c9ccaa","#3366cc"] /* #0 is misc, 1-9 are blocks, 10 is lunch, 11 is RP, 12 is Kab Shab */
+        var blockcolors = ["#c6c6d6","#6ec0d6","#8d7cc2","#c17ba0","#e06665","#2aa3ac","#d64087","#b4a7d5","#9fc5e9","#d6a6be","#aaccaa","#c9ccaa","#6c91d9"] /* #0 is misc, 1-9 are blocks, 10 is lunch, 11 is RP, 12 is Kab Shab */
         var correctjsondata = ""
         var total = 0
         var tomorrowtotal = 0
