@@ -36,8 +36,9 @@
             style="color: #cc3333">today</span>
     </p>
 
-    <p style="margin: 0px 0px 0px 20px">
-        <i><span style="color: #414256"><span id="todayis"><noscript>JavaScript is disabled. This website will not function until you enable it.</noscript></span><span id="howstheschedule"></span></i>
+    <p style="margin: 0px 0px 0px 20px; line-height: 1.5;">
+        <i><span style="color: #414256"><span id="todayis"><noscript>JavaScript is disabled. This website will not function until you enable it.</noscript></span><span id="howstheschedule"></span></i><br>
+        <i><span style="color: #414256"><span id="todayis"><noscript>Learn how to enable JavaScript in your browser <a href="https://enable-javascript.com">here</a>.</noscript></span><span id="currenttime"></span></i>
     </p>
 
 
@@ -106,7 +107,7 @@
     <span>Data sourced from the <a href="https://kehillah.org/wp-content/uploads/2022/08/MasterSchedule22_23.jpg" target="_blank" rel="noopener noreferrer"><span style="color: #aac">Kehillah master schedule</span></a>.</span><br>
     <span><span style="font-family: Righteous">kehillah.today</span> is not affiliated with <a href="https://kehillah.org/" target="_blank" rel="noopener noreferrer"><span style="color: #aac">kehillah.org</span></a>.</span><br>
     <span>Fonts used: <span style="font-family: Righteous">Righteous</span>, <span style="font-family: Bebas Neue">Bebas Neue</span>, and Barlow Semi Condensed.</span><br>
-    <span id="version">v0.4.8b &mdash; August 26, 2022</span><br>
+    <span id="version">v0.4.9 &mdash; September 1, 2022</span><br>
     <span></p>
     <script>
         minutes = 0;
@@ -330,6 +331,11 @@
             }
         }
 
+        function CurrentTime() {
+            datenow = new Date();
+            return datenow.toLocaleTimeString([], {hour: 'numeric', minute:'2-digit', second:'2-digit'})
+        }
+
         function UpdateTimer() {
             trigger = -1;
             var dnow = new Date();
@@ -373,7 +379,7 @@
             } else {
             document.getElementById('whatsup').innerHTML = dasharray[dashes] + "&emsp;" + CustomEventName(datedata[theschedule]['events'][trigger - 1]['name']) + "&emsp;" + dasharray[dashes]
             }
-
+            document.getElementById('currenttime').innerHTML = CurrentTime()
             if(!(pageloaddate == dnow.getDate())) {
                 location.reload()
             }
