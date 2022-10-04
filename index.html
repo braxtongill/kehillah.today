@@ -3,6 +3,7 @@
 
 <head>
     <title>Kehillah's Bell Schedule | kehillah.today</title>
+    <meta charset="UTF-8">
     <meta name="title" content="Kehillah's Bell Schedule | kehillah.today">
     <meta name="description" content="kehillah.today keeps track of Kehillah's mildly frustrating bell schedule so that you don't have to.">
     <meta property="og:type" content="website">
@@ -13,9 +14,9 @@
     <meta name="theme-color" content="#eeeeff">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <script type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js"></script>
     <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png" />
@@ -30,19 +31,21 @@
     <meta name="description" content="" />
 </head>
 
-<body style="background-color:#eef" class="unselectable">
+<body class="unselectable">
     <p class="logo" style="margin: 20px 0px 5px 20px; cursor: pointer" onClick="easterEgg()">
         <span style="color: #414256">kehillah</span><span style="color: #9590a5">.</span><span
             style="color: #cc3333">today</span>
     </p>
 
-    <p style="margin: 0px 0px 0px 20px; line-height: 1.5;">
+<p style="margin: 0px 0px 0px 20px; line-height: 1.5;" id="spectoday">
         <i><span style="color: #414256"><span id="todayis"><noscript>JavaScript is disabled. This website will not function until you enable it.</noscript></span><span id="howstheschedule"></span></i><br>
+        <span class="specialschedule">SPECIAL SCHEDULE</span>
         <i><span style="color: #414256"><span id="todayis"><noscript>Learn how to enable JavaScript in your browser <a href="https://enable-javascript.com">here</a>.</noscript></span><span id="currenttime"></span></i>
     </p>
 
 
     <p class="display above-clock" id="whatsup"></p>
+
     <p class="display clock" id="clock"></p>
     
 
@@ -102,12 +105,16 @@
         <input type="submit" onclick="return makeCookies()" class="classsubmit" value="Update">
     </form>
 
+    <p><button class="button" onclick="PassingPeriods()" id="togglepassingperiods">
+        Hide Passing Periods
+    </button></p>
+
     <p id="credits" style="color:#aac; margin: 20px;" class="lines">
     <span>Created by B. Gill. Contact me at <a href="mailto: bgill2023@kehillahstudent.org"><span style="color: #aac">bgill2023@kehillahstudent.org</span></a>.</span><br>
     <span>Data sourced from the <a href="https://kehillah.org/wp-content/uploads/2022/08/MasterSchedule22_23.jpg" target="_blank" rel="noopener noreferrer"><span style="color: #aac">Kehillah master schedule</span></a>.</span><br>
     <span><span style="font-family: Righteous">kehillah.today</span> is not affiliated with <a href="https://kehillah.org/" target="_blank" rel="noopener noreferrer"><span style="color: #aac">kehillah.org</span></a>.</span><br>
     <span>Fonts used: <span style="font-family: Righteous">Righteous</span>, <span style="font-family: Bebas Neue">Bebas Neue</span>, and Barlow Semi Condensed.</span><br>
-    <span id="version">v0.4.10b &mdash; September 9, 2022</span><br>
+    <span id="version">v0.5.0 &mdash; October 4, 2022</span><br>
     <span></p>
     <script>
         minutes = 0;
@@ -119,40 +126,44 @@
         var ftrigger = -1;
         var theschedule = ""
         var tomorrowschedule = ""
-        var blockcolors = ["#c6c6d6","#6ec0d6","#8d7cc2","#c17ba0","#e06665","#2aa3ac","#d64087","#b4a7d5","#9fc5e9","#d6a6be","#aaccaa","#c9ccaa","#6c91d9"] /* #0 is misc, 1-9 are blocks, 10 is lunch, 11 is RP, 12 is Kab Shab */
-        var correctjsondata = ""
+        var blockcolors = ["#c6c6d6","#6ec0d6","#8d7cc2","#c17ba0","#e06665","#2aa3ac","#d64087","#b4a7d5","#9fc5e9","#d6a6be","#aaccaa","#c9ccaa","#6c91d9","#cfcf86", "#c288a2"] /* #0 is misc, 1-9 are blocks, 10 is lunch, 11 is RP, 12 is Kab Shab, 13 is Beit Midrash / Seminar, 14 is Advisory */
+
+        var eventnames = ["Passing Period","Block 1","Block 2","Block 3","Block 4","Block 5","Block 6","Block 7","Block 8","Block 9","Lunch","Reflective Practice","Kab Shab","Beit Midrash / Seminar","Advisory"]
+        var eventnames_short = ["PASS","B1","B2","B3","B4","B5","B6","B7","B8","B9","LUN","RP","KS","SEM","ADV"]
+        var correctjsondata = "";
         var total = 0
         var tomorrowtotal = 0
-        var pageloaddate = dnow.getDate()
-        var tinyscreen = false;
-        var dashes = 2;
-        var dasharray = ["", "-", "⸻"]
-        var start = 0;
+        var pageloaddate = dnow.getDate() // reloads the page once it's midnight
+        var tinyscreen = false; // whether they're a mobile user
+        var dashes = 2; // how wide the dashes to the left and right of the class name should be
+        var dasharray = ["", "-", "⸻"] // said dashes
+        var start = 0; // 
         var tomorrowstart = 0;
         var datesearch = 0;
 
         var noschool = false;
         var noschooltomorrow = false;
 
+        var passingperiodsvisible = true;
         var nexteventtime = 0;
         var cookiejar = []
         var istheClassNameformvisible = false;
         var customnamesforevents = []
         var regularnamesforevents = ["Block 1","Block 2","Block 3","Block 4","Block 5","Block 6","Block 7","Block 8","Block 9","Reflective Practice"]
 
-        var easterhue = 240;
+        var easterhue = 240; // the Easter Egg hue
 
         document.getElementById('todayis').innerText = fulldotw[dnow.getDay()] + ", " + fullmoty[dnow.getMonth()] + " " + dnow.getDate() + " · " //updates 
 
-        function apz(num) { /*add prefix zero*/
+        function apz(num) { /* add prefix zero. converts numbers like "2" into "02". useful for the large clock */
           return (num < 10 ? '0' : '') + num;
         };
 
-        function removeBrokenCharacters(string) {
+        function removeBrokenCharacters(string) { // prevents evil people from including ";" and "," in the localStorage which would really mess things up for me
             return (string.replace(/[;\,]/g, ''))
         }
 
-        function ChangeClasses() {
+        function ChangeClasses() { // shows and hides the class changing form
             if(!istheClassNameformvisible) {
                 document.getElementById('ClassForm').style.display = "block"
                 istheClassNameformvisible = true;
@@ -162,24 +173,71 @@
             }
         }
 
-        function toUnix(timestamp) {
+        function PassingPeriods() { //what happens when you click the "Hide/Show Passing Periods" button
+            if (passingperiodsvisible == true) {
+                passingperiodsvisible = false;
+                document.getElementById('togglepassingperiods').innerText = 'Show Passing Periods'
+                localStorage.setItem('passVisible',false); // localStorage item containing data on whether the user's hiding passing periods
+
+                for(i = 0; i < 99; i++) {
+          
+                    if(!([null, undefined, 'null', 'undefined'].includes(document.getElementById("event_" + i)))) { // if the event actually exists
+                    //adds the "hidden" class to Passing Periods, which makes them invisible
+                    if(!(document.getElementById("event_" + i).classList.contains('hidden')) && datedata[theschedule]['events'][i]['name'] == "Passing Period") { // if the event's a passing period
+                        document.getElementById("event_" + i).classList.add('hidden'); // hide it
+                    }
+                    }
+
+                    if(!([null, undefined, 'null', 'undefined'].includes(document.getElementById("tomorrow_" + i)))) { // if the event exists
+                    if(!(document.getElementById("tomorrow_" + i).classList.contains('hidden')) && datedata[tomorrowschedule]['events'][i]['name'] == "Passing Period") { // and it's a passing period...
+                        document.getElementById("tomorrow_" + i).classList.add('hidden'); // hide it
+                    }  
+                }
+            }
+
+                } else {
+                localStorage.setItem('passVisible',true);
+                passingperiodsvisible = true;
+                document.getElementById('togglepassingperiods').innerText = 'Hide Passing Periods'
+
+                
+                for(i = 0; i < 99; i++) {
+                    if(!([null, undefined, 'null', 'undefined'].includes(document.getElementById("event_" + i)))) { // exactly the same as the code above but shows the passing periods instead of hiding them
+                    //removes the "hidden" class to Passing Periods, which makes them visible again
+                    if(document.getElementById("event_" + i).classList.contains('hidden') && datedata[theschedule]['events'][i]['name'] == "Passing Period") {
+                        document.getElementById("event_" + i).classList.remove('hidden');
+                    }
+                    }
+
+                    if(!([null, undefined, 'null', 'undefined'].includes(document.getElementById("tomorrow_" + i)))) {
+                    if(document.getElementById("tomorrow_" + i).classList.contains('hidden') && datedata[tomorrowschedule]['events'][i]['name'] == "Passing Period") {
+                        document.getElementById("tomorrow_" + i).classList.remove('hidden');
+                    }  
+                }
+            }
+            }
+        
+        
+        }
+
+        function toOffset(timestamp) { // adds the number of minutes into "timestamp" into the current time, returns a time in string form e.g. ("12:54 AM")
             minsunix = Date.now() + (timestamp * 60000)
             return new Date(minsunix).toLocaleTimeString([], {hour: 'numeric', minute:'2-digit'})
         }
 
-        function MakeFunTimestamps(convert) {
-            if (convert <= 0) {
+        function MakeFunTimestamps(convert) { // converts the minutes offset into a timestamp
+            if (convert <= 0) { // if negative time until the class
                 convertible = "Passed!";
-            } else if (convert <= 1) {
+            } else if (convert <= 1) { // if less than 1 minute
                 convertible =
                 (((convert) * 60).toFixed(2) + "s");
-            } else if (convert <= 60) {
+            } else if (convert <= 60) { // if less than 60 minutes
                 convertible =
                 (Math.floor((convert))) +
                     "m " +
                     (Math.floor((convert * 60)) % 60) +
                     "s"
-            } else if (convert > 60) {
+            } else if (convert > 60) { // if greater than 1 hour
                 convertible =
                 (Math.floor((convert) / 60)) +
                     "h " +
@@ -190,9 +248,9 @@
             return convertible;
         }
 
-        function makeCookies() { //they're called "cookies" because i used cookies before localStorage, but that didn't work on safari. i keep it here because "storageJar" sounds really lame. besides, why are you even looking through this code? did something break??
+        function makeCookies() { // they're called "cookies" because i used cookies before localStorage, but that didn't work on safari. i keep it here because "storageJar" sounds really lame. besides, why are you even looking through this code? did something break??
             cookiejar = []
-            for(i = 0; i < 10; i++) {
+            for(i = 0; i < 10; i++) { // 9 blocks and reflective practice
             console.log(removeBrokenCharacters(document.getElementsByClassName('classinput')[i].value));
             cookiejar.push(removeBrokenCharacters(document.getElementsByClassName('classinput')[i].value))  
             }
@@ -200,17 +258,17 @@
             location.reload()
         }
 
-        function cookieToClasses() {
-            if(localStorage.getItem('classes') == null) {
-                localStorage.setItem('classes', regularnamesforevents.toString());
+        function cookieToClasses() { // converts the localStorage to the class names
+            if(localStorage.getItem('classes') == null) { 
+                localStorage.setItem('classes', regularnamesforevents.toString()); // if the user didn't give a name for this class, ignore it and load the normal block name
             }
             console.log(localStorage.getItem('classes'))
-            var magic = (localStorage.getItem('classes').split(","));
+            var magic = (localStorage.getItem('classes').split(",")); // adds commas between the class names. it was kinda magical as to how this worked. therefore, i named it "magic". sue me
             console.log(magic)
-            console.log("^^")
+            console.log("^^") // i was very happy when this worked so enjoy my kaomoji
             for(i = 0; i < 10; i++) {
             if(!(magic[i] == regularnamesforevents[i])) {
-            document.getElementById("class" + regularnamesforevents[i].replace(/\s/g, '')).value = magic[i]
+            document.getElementById("class" + regularnamesforevents[i].replace(/\s/g, '')).value = magic[i] // puts the event names into the form for convenience to the user
             }
             console.log(magic[i])
             customnamesforevents.push(magic[i])
@@ -218,42 +276,46 @@
         }
         cookieToClasses()
 
-        function CustomEventName(name) {
-            if(customnamesforevents[regularnamesforevents.indexOf(name)] == '' || customnamesforevents[regularnamesforevents.indexOf(name)] == undefined || name == customnamesforevents[regularnamesforevents.indexOf(name)]) {
-                return name;
+        function CustomEventName(name) { // allows you to return the custom name for the event
+            if(customnamesforevents[regularnamesforevents.indexOf(name)] == '' || customnamesforevents[regularnamesforevents.indexOf(name)] == undefined || name == customnamesforevents[regularnamesforevents.indexOf(name)]) { // if the user doesn't have a name for the class, or it's undefined, or it equals some dumb thing like "Block 1"...
+                return name;  // do absolutely nothing
             } else {
-                return "<i>" + customnamesforevents[regularnamesforevents.indexOf(name)] + "</i>"
+                return "<i>" + customnamesforevents[regularnamesforevents.indexOf(name)] + "</i>" // otherwise return the user's custom name
             }
         }
 
-        function getColor(id) {
+        function getColor(id) { // gives a color to the correct div element
             console.log(id)
             if(id.startsWith("Block")) {
-                return blockcolors[id.slice(-1)];
+                return blockcolors[id.slice(-1)]; // return items 1-9 in the custom block schedule. won't work if kehillah adds Block 10 back . Sorry
             } else if(id.startsWith("Lunch")) {
                 return blockcolors[10];
             } else if(id.startsWith("Reflective")) {
                 return blockcolors[11];
             } else if(id.startsWith("Kab Shab")) {
                 return blockcolors[12];
+            } else if(id.startsWith("Beit Midrash") || id.startsWith("Seminar")) {
+                return blockcolors[13];
+            } else if(id.startsWith("Advisory")) {
+                return blockcolors[14];
             } else {
                 return blockcolors[0];
             }
         }
 
         function easterEgg() {
-            easterhue = ((easterhue + 100) % 360)
+            easterhue = ((easterhue + 100) % 360) // changes the hue of the background by 100 degrees. spicy!
             document.body.style.backgroundColor = "none"
             document.body.style.backgroundColor = "hsl(" + easterhue + ", 100%, 96%)"
         }
 
-        function findNextDay() {
+        function findNextDay() { // returns the schedule for the next day (whether it's custom or regular)
             var tomorrow = new Date();
             tomorrow.setDate(dnow.getDate() + 1)
             return WhichScheduleToLoad(tomorrow.getFullYear() + "-" + apz(tomorrow.getMonth() + 1) + "-" + apz(tomorrow.getDate()), true)
         }
 
-        function UpdateClock(convert) {
+        function UpdateClock(convert) { // update the clock. very similar to MakeFunTimestamps(). i guess the clock isn't that fun; maybe it should be renamed to MakeClockFun()!
             //console.log(convert)
             if (convert <= 0) {
                 convertible = "";
@@ -278,7 +340,7 @@
 
         datedata = window.dates;
 
-        function WhichScheduleToLoad(day = (dnow.getFullYear() + "-" + apz(dnow.getMonth() + 1) + "-" + apz(dnow.getDate())), tomorrow) {
+        function WhichScheduleToLoad(day = (dnow.getFullYear() + "-" + apz(dnow.getMonth() + 1) + "-" + apz(dnow.getDate())), tomorrow) { // determines the schedule to load. the input is always an ISO 8601 string (e.g. "2023-05-20"); the output is either a 3-character string ("MON") if there's no special schedule, or itself if there is one ("2023-05-20"). you'll notice these are the same outputs as the dates.js file. this is intentional.
             //console.log(day)
             if (day in datedata) {
                 //console.log("Custom schedule for this date exists.")
@@ -293,7 +355,7 @@
                 //console.log("Custom schedule for this date does not exist.")
                 if(tomorrow === false) {
                 document.getElementById('howstheschedule').innerText = "Normal Schedule"
-                window.theschedule = dotw[(new Date(day + "T00:00-08:00")).getDay()]
+                window.theschedule = dotw[(new Date(day + "T00:00-08:00")).getDay()] // not sure how this code works after DST ends!! everything may break 
                 } else if(tomorrow === true) {
                     window.tomorrowschedule = dotw[(new Date(day + "T00:00-08:00")).getDay()]
                 }
@@ -301,7 +363,7 @@
             }
         }
 
-        function CustomScheduleExists(day) {
+        function CustomScheduleExists(day) { // does a custom schedule exist for this day (in ISO 8601 format)?
             if (day in datedata) {
                 return true;
             } else {
@@ -309,9 +371,9 @@
             }
         }
 
-        if(screen.width < 500) {
-            tinyscreen = true;
-            dashes = 0;
+        if(screen.width < 500) { // are you a mobile user?
+            tinyscreen = true; // haha you are!!
+            dashes = 0; // remove the dashes for mobile users because they got in the way
         }
 
         function NextEventTime() {
@@ -341,7 +403,7 @@
             var dnow = new Date();
             minutes = ((dnow.getSeconds() / 60) + dnow.getMinutes() + (dnow.getHours() * 60) + (dnow.getMilliseconds() / 60000))
             for (i = start; i < EventsToLoad; i++) {
-                document.getElementById('event_' + String(i)).innerHTML = "<b>" + CustomEventName(datedata[theschedule]['events'][i]['name']) + "</b> at " + toUnix(datedata[theschedule]['events'][i]['timestamp'] - minutes) + " (" + MakeFunTimestamps(datedata[theschedule]['events'][i]['timestamp'] - minutes) + ")";
+                document.getElementById('event_' + String(i)).innerHTML = "<b>" + CustomEventName(datedata[theschedule]['events'][i]['name']) + "</b> at " + toOffset(datedata[theschedule]['events'][i]['timestamp'] - minutes) + " (" + MakeFunTimestamps(datedata[theschedule]['events'][i]['timestamp'] - minutes) + ")";
                 if (datedata[theschedule]['events'][i]['timestamp'] - minutes < 0) {
                     start += 1;
                     document.getElementById('event_' + String(i)).style.display = "none";
@@ -352,15 +414,14 @@
                         trigger = i;
                     }
                 }
-            }
-            for (i = tomorrowstart; i < tomorrowEventsToLoad; i++) {
-                document.getElementById('tomorrow_' + String(i)).innerHTML = ("<b>" + CustomEventName(datedata[tomorrowschedule]['events'][i]['name']) + "</b> at " + toUnix(datedata[tomorrowschedule]['events'][i]['timestamp'] - minutes + 1440) + " (" + MakeFunTimestamps(datedata[tomorrowschedule]['events'][i]['timestamp'] - minutes + 1440) + ")"); //adjust number of minutes
+        }
+        for (i = tomorrowstart; i < tomorrowEventsToLoad; i++) {
+                document.getElementById('tomorrow_' + String(i)).innerHTML = ("<b>" + CustomEventName(datedata[tomorrowschedule]['events'][i]['name']) + "</b> at " + toOffset(datedata[tomorrowschedule]['events'][i]['timestamp'] - minutes + 1440) + " (" + MakeFunTimestamps(datedata[tomorrowschedule]['events'][i]['timestamp'] - minutes + 1440) + ")"); //adjust number of minutes
                     if(ftrigger == -1) {
                     console.log('triggered thing - item #' + i + ' was visible!')
                         ftrigger = i;
                     }
-                
-            }
+        }
 
             if(noschool == true || start === EventsToLoad) {
             document.getElementById('upcomingblock').style.display = "block"
@@ -409,6 +470,7 @@
                 var div = document.createElement("div");
                 console.log("Made element event_" + q + ".");
                 div.id = ("event_" + q);
+                div.classList.add('event');
                 div.innerHTML = ("Loading...");
                 div.style.padding = "15px";
                 div.style.backgroundColor = "#9590a5";
@@ -454,6 +516,7 @@
                 div.id = ("tomorrow_" + i);
                 div.innerHTML = ("Loading...");
                 div.style.padding = "15px";
+                div.classList.add('event');
                 div.style.backgroundColor = "#9590a5";
                 div.style.boxShadow = "0px 0px 0px 2px #eef";  
                 div.style.textAlign = "left";
@@ -480,22 +543,88 @@
             }
         }
 
-        MakeEverything()
-        MakeTomorrow()
+        function CheckYourself() {
+            if(localStorage.getItem('passVisible') == "false" || localStorage.getItem('passVisible') == false) {
+            passingperiodsvisible = false;
+            document.getElementById('togglepassingperiods').innerText = 'Show Passing Periods'
+
+            for(i = 0; i < 99; i++) {
+                    if(!([null, undefined, 'null', 'undefined'].includes(document.getElementById("event_" + i)))) { //adds the "hidden" class to Passing Periods, which makes them invisible
+                    if(!(document.getElementById("event_" + i).classList.contains('hidden')) && datedata[theschedule]['events'][i]['name'] == "Passing Period") {
+                        document.getElementById("event_" + i).classList.add('hidden');
+                    }
+                    }
+
+                    if(!([null, undefined, 'null', 'undefined'].includes(document.getElementById("tomorrow_" + i)))) {
+                    if(!(document.getElementById("tomorrow_" + i).classList.contains('hidden')) && datedata[tomorrowschedule]['events'][i]['name'] == "Passing Period") {
+                        document.getElementById("tomorrow_" + i).classList.add('hidden');
+                    }  
+                }
+            }
+            
+        } else {
+                console.log("set ppv to true")
+            passingperiodsvisible = true;
+            document.getElementById('togglepassingperiods').innerText = 'Hide Passing Periods'
+
+            for(i = 0; i < 99; i++) {
+                    if(!([null, undefined, 'null', 'undefined'].includes(document.getElementById("event_" + i)))) { //removes the "hidden" class to Passing Periods, which makes them visible again
+                    if(document.getElementById("event_" + i).classList.contains('hidden') && datedata[theschedule]['events'][i]['name'] == "Passing Period") {
+                        document.getElementById("event_" + i).classList.remove('hidden');
+                    }
+                    }
+
+                    if(!([null, undefined, 'null', 'undefined'].includes(document.getElementById("tomorrow_" + i)))) {
+                    if(document.getElementById("tomorrow_" + i).classList.contains('hidden') && datedata[tomorrowschedule]['events'][i]['name'] == "Passing Period") {
+                        document.getElementById("tomorrow_" + i).classList.remove('hidden');
+                    }  
+                }
+            }
+            }
         
+        
+        /*if(localStorage.getItem('SPOOKY') == 'true') {
+            document.body.style.background = "#fa9111";
+            var blockcolors = ["#d35721","#6ec0d6","#8d7cc2","#c17ba0","#e06665","#2aa3ac","#d64087","#b4a7d5","#9fc5e9","#d6a6be","#aaccaa","#c9ccaa","#6c91d9","#cfcf86", "#c288a2"] /* #0 is misc, 1-9 are blocks, 10 is lunch, 11 is RP, 12 is Kab Shab, 13 is Beit Midrash / Seminar, 14 is Advisory */
+        /*    for(i = 0; i < document.getElementsByClassName('event').length; i++) {
+            document.getElementsByClassName('event')[i].style.boxShadow = "0px 0px 0px 2px #fa9111" 
+            }
+        }*/
+        }//these ending "}"s are the bane of my existence. 
+
+        MakeEverything() // When the code began to create elements and time—
+        MakeTomorrow()   // the website being unformed and void, with darkness over the surface of the page and pure emptiness covering its elements—
+        CheckYourself()  // The code said, “bro go check yourself”; and the page checked itself. 
 
         setInterval(UpdateTimer, 58)
     </script>
 
 </body>
 <style>
+    body {
+        background-color: #EEF;
+    }
+
     .display {
-        font-family: 'Bebas Neue';
+        font-family: 'Bebas Neue'; /* awesome font */
         margin: 10px 40px 10px 40px;
         text-align: center;
         color: #335;
-        line-height: 1
+        line-height: 1;
+    }
 
+    .specialschedule {
+        font-size: 16px;
+        background: linear-gradient(90deg, rgba(204,37,112,1) 0%, rgba(204,37,165,1) 100%);
+        text-align: center;
+        border-radius: 99px;
+        color: #ffffff;
+        width: 150px;
+        height: 25px;
+        font-weight: bold;
+        margin: 0px;
+        display: inline-block;
+        font-style: italic;
     }
 
     .clock {
@@ -503,7 +632,7 @@
     }
 
     .above-clock {
-        font-size: 40px
+        font-size: 40px;
     }
 
     .logo {
@@ -544,6 +673,7 @@
         padding: 10px 24px;
         border-radius: 4px;
         transition-duration: 0.2s;
+        cursor: pointer;
     }
 
     .button:hover {
@@ -599,5 +729,10 @@
         font-size: 100px;
         }
     }
+
+    .hidden {
+        display: none;
+    }
+
 </style>
 </html>
