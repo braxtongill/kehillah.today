@@ -25,7 +25,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="favicon/favicon.ico" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Righteous&family=Barlow+Semi+Condensed&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Righteous&family=Barlow+Semi+Condensed:wght@400;700&display=swap" rel="stylesheet" />
     <title>kehillah.today</title>
     <script src="dates.js?v=2"></script>
     <meta name="description" content="" />
@@ -37,11 +37,17 @@
             style="color: #cc3333">today</span>
     </p>
 
-<p style="margin: 0px 0px 0px 20px; line-height: 1.5;" id="spectoday">
+<p style="margin: 0px 0px 0px 20px; line-height: 1.5;">
         <i><span style="color: #414256"><span id="todayis"><noscript>JavaScript is disabled. This website will not function until you enable it.</noscript></span><span id="howstheschedule"></span></i><br>
-        <span class="specialschedule">SPECIAL SCHEDULE</span>
+        <span class="specialschedule" id="spectoday" style="display: none">SPECIAL SCHEDULE</span>
         <i><span style="color: #414256"><span id="todayis"><noscript>Learn how to enable JavaScript in your browser <a href="https://enable-javascript.com">here</a>.</noscript></span><span id="currenttime"></span></i>
     </p>
+
+    <p id="announcement" class="announcement"><span style="font-size: 24px; font-weight: bold;">Announcement</span><br><br><span>
+
+        This is a test of kehillah.today's new Announcement system. You'll be able to see announcements here.
+
+    </span><br><br><br><span class="button" onclick="dismissAnnouncement()">Dismiss</span><br><br><span style="font-size: 12px; font-style: italic; color: #335; cursor: pointer;" onclick="iHateAnnouncements()">Never show me announcements again</span></p>
 
 
     <p class="display above-clock" id="whatsup"></p>
@@ -62,8 +68,10 @@
 
     <p class="logo">
         <span style="color: #414256">kehillah</span><span style="color: #9590a5">.</span><span
-            style="color: #3399cc">tomorrow</span>
+            style="color: #3399cc">tomorrow</span><span class="specialschedule sstomorrow" id="spectomorrow" style="display: none">SPECIAL SCHEDULE</span>
+
     </p>
+
 
     <p style="margin: 20px; font-style: italic; font-size: 25px; color: #aac; display: none;" id="tomorrowblock"><span id="tomorrownotice"></span></p>
     
@@ -102,7 +110,7 @@
         <label for="classReflectivePractice" id="labelReflectivePractice">Reflective Practice</label>
         <input type="text" class="classinput" id="classReflectivePractice" placeholder="Reflective Practice">
 <br><br>
-        <input type="submit" onclick="return makeCookies()" class="classsubmit" value="Update">
+        <input type="submit" onclick="return makeCookies()" class="button blackbutton" value="Update Blocks">
     </form>
 
     <p><button class="button" onclick="PassingPeriods()" id="togglepassingperiods">
@@ -114,7 +122,7 @@
     <span>Data sourced from the <a href="https://kehillah.org/wp-content/uploads/2022/08/MasterSchedule22_23.jpg" target="_blank" rel="noopener noreferrer"><span style="color: #aac">Kehillah master schedule</span></a>.</span><br>
     <span><span style="font-family: Righteous">kehillah.today</span> is not affiliated with <a href="https://kehillah.org/" target="_blank" rel="noopener noreferrer"><span style="color: #aac">kehillah.org</span></a>.</span><br>
     <span>Fonts used: <span style="font-family: Righteous">Righteous</span>, <span style="font-family: Bebas Neue">Bebas Neue</span>, and Barlow Semi Condensed.</span><br>
-    <span id="version">v0.5.0a &mdash; October 4, 2022</span><br>
+    <span id="version">v0.5.1 &mdash; October 6, 2022</span><br>
     <span></p>
     <script>
         minutes = 0;
@@ -146,7 +154,7 @@
 
         var passingperiodsvisible = true;
         var nexteventtime = 0;
-        var cookiejar = []
+        var cookiejar = [];
         var istheClassNameformvisible = false;
         var customnamesforevents = []
         var regularnamesforevents = ["Block 1","Block 2","Block 3","Block 4","Block 5","Block 6","Block 7","Block 8","Block 9","Reflective Practice"]
@@ -309,10 +317,10 @@
             document.body.style.backgroundColor = "hsl(" + easterhue + ", 100%, 96%)"
         }
 
-        function findNextDay() { // returns the schedule for the next day (whether it's custom or regular)
+        function findNextDay() { // returns the ISO 8601 day for tomorrow.
             var tomorrow = new Date();
             tomorrow.setDate(dnow.getDate() + 1)
-            return WhichScheduleToLoad(tomorrow.getFullYear() + "-" + apz(tomorrow.getMonth() + 1) + "-" + apz(tomorrow.getDate()), true)
+            return tomorrow.getFullYear() + "-" + apz(tomorrow.getMonth() + 1) + "-" + apz(tomorrow.getDate())
         }
 
         function UpdateClock(convert) { // update the clock. very similar to MakeFunTimestamps(). i guess the clock isn't that fun; maybe it should be renamed to MakeClockFun()!
@@ -346,17 +354,21 @@
                 //console.log("Custom schedule for this date exists.")
                 if(tomorrow === false) {
                 document.getElementById('howstheschedule').innerText = "Abnormal Schedule"
-                window.theschedule = day
+                document.getElementById('spectoday').style.display = "inline-block";
+                window.theschedule = day;
                 } else if(tomorrow === true) {
-                window.tomorrowschedule = day
+                document.getElementById('spectomorrow').style.display = "inline-block";
+                window.tomorrowschedule = day;
                 }
                 return day
             } else {
                 //console.log("Custom schedule for this date does not exist.")
                 if(tomorrow === false) {
+                document.getElementById('spectoday').style.display = "none";
                 document.getElementById('howstheschedule').innerText = "Normal Schedule"
                 window.theschedule = dotw[(new Date(day + "T00:00-08:00")).getDay()] // not sure how this code works after DST ends!! everything may break 
                 } else if(tomorrow === true) {
+                    document.getElementById('spectomorrow').style.display = "none";
                     window.tomorrowschedule = dotw[(new Date(day + "T00:00-08:00")).getDay()]
                 }
                 return dotw[(new Date(day + "T00:00-08:00")).getDay()]
@@ -376,6 +388,16 @@
             dashes = 0; // remove the dashes for mobile users because they got in the way
         }
 
+        function dismissAnnouncement() {
+            document.getElementById('announcement').style.display = "none";
+            localStorage.setItem('')
+        }
+
+        function iHateAnnouncements() {
+            localStorage.setItem('announcements','none')
+        }
+
+
         function NextEventTime() {
             for(search = 1; search < 50; search++) {
                 var day = new Date();
@@ -385,7 +407,7 @@
                 if(!(datedata[dateset]['events'][0]['name'] == "No School")) {
                     for(s = 0; s < 20; s++) {
                     if(!(CustomEventName(datedata[dateset]['events'][s]['name']) == "Free") && !(CustomEventName(datedata[dateset]['events'][s]['name']) == "<i>Free</i>")) {
-                        console.log('returned with s= ' + s + "; " + datedata[dateset]['events'][s]['name'])
+                        //console.log('returned with s= ' + s + "; " + datedata[dateset]['events'][s]['name'])
                     return (1440 * (search) + datedata[dateset]['events'][s]['timestamp'] - minutes)
                     }
                     }
@@ -429,7 +451,7 @@
             document.getElementById('upcomingnotice').innerText = "No more events today."
             }
             document.getElementById('clock').innerText = UpdateClock(NextEventTime())
-            document.title = (UpdateClock(NextEventTime) + " | kehillah.today")
+            document.title = (UpdateClock(NextEventTime) + " " + "| kehillah.today")
 
             } else {
             document.getElementById('clock').innerText = UpdateClock(datedata[theschedule]['events'][trigger]['timestamp'] - minutes)
@@ -442,7 +464,9 @@
             }
             document.getElementById('currenttime').innerHTML = CurrentTime()
             if(!(pageloaddate == dnow.getDate())) {
-                location.reload()
+                if(Math.floor(Math.random() * 20) == 0) { // prevents the page from reloading every 0.058 seconds, causing it to freak out and die
+                location.reload();
+                }
             }
         }   
 
@@ -478,8 +502,8 @@
                 div.style.textAlign = "left";
                 div.style.fontSize = "1.5em"
                 div.style.lineHeight = "100%"
-                console.log(q)
-                div.style.background = getColor(datedata[theschedule]['events'][q]['name'])
+                console.log(q);
+                div.style.background = getColor(datedata[theschedule]['events'][q]['name']);
                 if(noschool) {
                     div.style.display = "none";
                     document.getElementById('upcomingblock').style.display = "block";
@@ -580,7 +604,7 @@
                     }  
                 }
             }
-            }
+        }
         
         
         /*if(localStorage.getItem('SPOOKY') == 'true') {
@@ -615,7 +639,7 @@
 
     .specialschedule {
         font-size: 16px;
-        background: linear-gradient(90deg, rgba(204,37,112,1) 0%, rgba(204,37,165,1) 100%);
+        background: linear-gradient(140deg, rgba(204,37,112,1) 0%, rgba(204,37,165,1) 100%);
         text-align: center;
         border-radius: 99px;
         color: #ffffff;
@@ -625,6 +649,38 @@
         margin: 0px;
         display: inline-block;
         font-style: italic;
+        line-height: 1.5;
+    }
+
+    .sstomorrow {
+        font-family: "Barlow Semi Condensed";
+        background: linear-gradient(140deg, rgba(72,37,204,1) 0%, rgba(13,232,209,1) 100%);
+        margin: 0px 0px 0px 20px;
+        position: relative;
+        bottom: 5px;
+    }
+
+    .announcement {
+        background-color: #babae6;
+        width: 300px;
+        z-index: 40;
+        border-radius: 20px;
+        font-size: 20px;
+        padding: 30px;
+        float: right;
+        position: absolute;
+        top: 40px;
+        right: 40px;
+        text-align: center;
+        box-shadow: 10px 10px rgb(65, 65, 91);
+        transition-duration: 0.2s;
+        display: none; /* the world's not ready! */
+    }
+
+    .announcement:hover {
+        background-color: #cacaff;
+        font-size: 24px;
+        width: 390px;
     }
 
     .clock {
@@ -674,11 +730,23 @@
         border-radius: 4px;
         transition-duration: 0.2s;
         cursor: pointer;
+        box-shadow: 4px 4px #757594;
     }
 
-    .button:hover {
-        background-color: #cce
+    .blackbutton {
+        background-color: #303086;
+        color: #EEF;
+        box-shadow: 4px 4px #404090;
     }
+
+    @media (hover: hover) {
+    .button:hover {
+        background-color: #cce;
+        box-shadow: 8px 8px #9292b3;
+        rotate: -2deg;
+        color: #000;
+    }
+}
 
     .classinput {
         background-color: #eef;
@@ -690,7 +758,7 @@
     }
 
     label {
-        font-size: 18px
+        font-size: 18px;
     }
 
     .classsubmit {
