@@ -27,8 +27,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Righteous&family=Barlow+Semi+Condensed:wght@400;700&display=swap" rel="stylesheet" />
     <title>kehillah.today</title>
-    <script src="dates.js?v=2"></script>
-    <meta name="description" content="" />
+    <script src="dates.js?v=3"></script>
 </head>
 
 <body class="unselectable">
@@ -122,7 +121,7 @@
     <span>Data sourced from the <a href="https://kehillah.org/wp-content/uploads/2022/08/MasterSchedule22_23.jpg" target="_blank" rel="noopener noreferrer"><span style="color: #aac">Kehillah master schedule</span></a>.</span><br>
     <span><span style="font-family: Righteous">kehillah.today</span> is not affiliated with <a href="https://kehillah.org/" target="_blank" rel="noopener noreferrer"><span style="color: #aac">kehillah.org</span></a>.</span><br>
     <span>Fonts used: <span style="font-family: Righteous">Righteous</span>, <span style="font-family: Bebas Neue">Bebas Neue</span>, and Barlow Semi Condensed.</span><br>
-    <span id="version">v0.5.1 &mdash; October 6, 2022</span><br>
+    <span id="version">v0.5.1b &mdash; October 11, 2022</span><br>
     <span></p>
     <script>
         minutes = 0;
@@ -167,7 +166,7 @@
           return (num < 10 ? '0' : '') + num;
         };
 
-        function removeBrokenCharacters(string) { // prevents evil people from including ";" and "," in the localStorage which would really mess things up for me
+        function removeBrokenCharacters(string) { // prevents evil people from including ";" and "," in the localStorage which would really mess things up
             return (string.replace(/[;\,]/g, ''))
         }
 
@@ -286,7 +285,7 @@
 
         function CustomEventName(name) { // allows you to return the custom name for the event
             if(customnamesforevents[regularnamesforevents.indexOf(name)] == '' || customnamesforevents[regularnamesforevents.indexOf(name)] == undefined || name == customnamesforevents[regularnamesforevents.indexOf(name)]) { // if the user doesn't have a name for the class, or it's undefined, or it equals some dumb thing like "Block 1"...
-                return name;  // do absolutely nothing
+                return name;  // do absolutely nothing. just return the name. nice try  Fool
             } else {
                 return "<i>" + customnamesforevents[regularnamesforevents.indexOf(name)] + "</i>" // otherwise return the user's custom name
             }
@@ -375,11 +374,11 @@
             }
         }
 
-        function CustomScheduleExists(day) { // does a custom schedule exist for this day (in ISO 8601 format)?
+        function CustomScheduleExists(day) { // does a special schedule exist for this day (in ISO 8601 format)?
             if (day in datedata) {
-                return true;
+                return true; // yes, a special schedule exists
             } else {
-                return false;
+                return false; // no, no special schedule exists
             }
         }
 
@@ -398,24 +397,24 @@
         }
 
 
-        function NextEventTime() {
-            for(search = 1; search < 50; search++) {
+        function NextEventTime() { // when's the next event? good for updating the clock when there's nothing going on.
+            for(search = 1; search < 50; search++) { // check the next 50 days
                 var day = new Date();
                 //console.log(search)
-                day.setDate(dnow.getDate() + search)
-                var dateset = (WhichScheduleToLoad(day.getFullYear() + "-" + apz(day.getMonth() + 1) + "-" + apz(day.getDate())))
-                if(!(datedata[dateset]['events'][0]['name'] == "No School")) {
+                day.setDate(dnow.getDate() + search) // add the number of days to the current day [BUG] [BUG] [FIX THIS] [SITE MIGHT BREAK IF WEEKENDS EXIST]
+                var dateset = (WhichScheduleToLoad(day.getFullYear() + "-" + apz(day.getMonth() + 1) + "-" + apz(day.getDate()))) // turn the current date into an ISO string
+                if(!(datedata[dateset]['events'][0]['name'] == "No School")) { // if there's no school today...
                     for(s = 0; s < 20; s++) {
-                    if(!(CustomEventName(datedata[dateset]['events'][s]['name']) == "Free") && !(CustomEventName(datedata[dateset]['events'][s]['name']) == "<i>Free</i>")) {
+                    if(!(CustomEventName(datedata[dateset]['events'][s]['name']) == "Free") && !(CustomEventName(datedata[dateset]['events'][s]['name']) == "<i>Free</i>")) { // [BETA] check to see if the user has "Free" as their block
                         //console.log('returned with s= ' + s + "; " + datedata[dateset]['events'][s]['name'])
-                    return (1440 * (search) + datedata[dateset]['events'][s]['timestamp'] - minutes)
+                    return (1440 * (search) + datedata[dateset]['events'][s]['timestamp'] - minutes) // then add some extra time to the timer representing their free blocks
                     }
                     }
                 }
             }
         }
 
-        function CurrentTime() {
+        function CurrentTime() { // turns the current time into a string, e.g. "9:12:24 AM". your milage may vary depending on your browser (like firefox for some reason says "9:12:24 a.m." instead)
             datenow = new Date();
             return datenow.toLocaleTimeString([], {hour: 'numeric', minute:'2-digit', second:'2-digit'})
         }
@@ -479,7 +478,7 @@
                 }
                 if(object.name == 'No School') {
                     console.log("NO SCHOOL TODAY")
-                    noschool = true
+                    noschool = true;
                 }
             })
 
