@@ -42,9 +42,16 @@
         <i><span style="color: #414256"><span id="todayis"><noscript>Learn how to enable JavaScript in your browser <a href="https://enable-javascript.com">here</a>.</noscript></span><span id="currenttime"></span></i>
     </p>
 
-    <p id="announcement" class="announcement"><span style="font-size: 24px; font-weight: bold;">Announcement</span><br><br><span>
+    <p id="announcement" class="announcement"><span style="font-size: 24px; font-weight: bold;">Announcement</span><br><br><span style="line-height: 1.2em">
 
-        This is a test of kehillah.today's new Announcement system. You'll be able to see announcements here.
+        <b>Picture Day</b><br>
+        Senior Sign up:  Book now!<br>Email sent from Still Light Studios.<br><br>
+        Picture Day: October 20, 2022.<br>
+        Retake Day: November 10, 2022 (11 AM &ndash; 1 PM).<br>
+        <br>Register <a href="https://docs.google.com/forms/d/e/1FAIpQLSfcdEY1oXb7ULRWxrsqGzJjkCRYU82IMg-QYb721CCUXVbncg/viewform" target="_blank">Retake Form</a><br><br>
+        
+        More information <a href="https://kehillah.org/kjhs_yearbook/" target="_blank">here</a>.<br>
+        Contact Ms. Chouhan if you have any questions concerning the yearbook or pictures. kchouhan@kehillah.org
 
     </span><br><br><br><span class="button" onclick="dismissAnnouncement()">Dismiss</span><br><br><span style="font-size: 12px; font-style: italic; color: #335; cursor: pointer;" onclick="iHateAnnouncements()">Never show me announcements again</span></p>
 
@@ -116,12 +123,12 @@
         Hide Passing Periods
     </button></p>
 
-    <p id="credits" style="color:#aac; margin: 20px;" class="lines">
-    <span>Created by B. Gill. Contact me at <a href="mailto: bgill2023@kehillahstudent.org"><span style="color: #aac">bgill2023@kehillahstudent.org</span></a>.</span><br>
-    <span>Data sourced from the <a href="https://kehillah.org/wp-content/uploads/2022/08/MasterSchedule22_23.jpg" target="_blank" rel="noopener noreferrer"><span style="color: #aac">Kehillah master schedule</span></a>.</span><br>
-    <span><span style="font-family: Righteous">kehillah.today</span> is not affiliated with <a href="https://kehillah.org/" target="_blank" rel="noopener noreferrer"><span style="color: #aac">kehillah.org</span></a>.</span><br>
+    <p id="credits" style="color:#8080a2; margin: 20px;" class="lines">
+    <span>Created by B. Gill. Contact me at <a href="mailto: bgill2023@kehillahstudent.org"><span style="color: #8080a2">bgill2023@kehillahstudent.org</span></a>.</span><br>
+    <span>Data sourced from the <a href="https://kehillah.org/wp-content/uploads/2022/08/MasterSchedule22_23.jpg" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">Kehillah master schedule</span></a>.</span><br>
+    <span><span style="font-family: Righteous">kehillah.today</span> is not affiliated with <a href="https://kehillah.org/" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">kehillah.org</span></a>.</span><br>
     <span>Fonts used: <span style="font-family: Righteous">Righteous</span>, <span style="font-family: Bebas Neue">Bebas Neue</span>, and Barlow Semi Condensed.</span><br>
-    <span id="version">v0.5.1b &mdash; October 11, 2022</span><br>
+    <span id="version">v0.5.2 &mdash; October 18, 2022</span><br>
     <span></p>
     <script>
         minutes = 0;
@@ -134,6 +141,7 @@
         var theschedule = ""
         var tomorrowschedule = ""
         var blockcolors = ["#c6c6d6","#6ec0d6","#8d7cc2","#c17ba0","#e06665","#2aa3ac","#d64087","#b4a7d5","#9fc5e9","#d6a6be","#aaccaa","#c9ccaa","#6c91d9","#cfcf86", "#c288a2"] /* #0 is misc, 1-9 are blocks, 10 is lunch, 11 is RP, 12 is Kab Shab, 13 is Beit Midrash / Seminar, 14 is Advisory */
+        var blockcolorsdark = [];
 
         var eventnames = ["Passing Period","Block 1","Block 2","Block 3","Block 4","Block 5","Block 6","Block 7","Block 8","Block 9","Lunch","Reflective Practice","Kab Shab","Beit Midrash / Seminar","Advisory"]
         var eventnames_short = ["PASS","B1","B2","B3","B4","B5","B6","B7","B8","B9","LUN","RP","KS","SEM","ADV"]
@@ -389,11 +397,16 @@
 
         function dismissAnnouncement() {
             document.getElementById('announcement').style.display = "none";
-            localStorage.setItem('')
+            localStorage.setItem('announcement-pd','viewed');
+        }
+
+        if(localStorage.getItem('announcement-pd') == 'viewed' || localStorage.getItem('announcements') == 'none') {
+            document.getElementById('announcement').style.display = "none";
         }
 
         function iHateAnnouncements() {
             localStorage.setItem('announcements','none')
+            document.getElementById('announcement').style.display = "none";
         }
 
 
@@ -625,7 +638,7 @@
 </body>
 <style>
     body {
-        background-color: #EEF;
+        background-color: #eef;
     }
 
     .display {
@@ -634,6 +647,7 @@
         text-align: center;
         color: #335;
         line-height: 1;
+        transition-duration: 0.2s;
     }
 
     .specialschedule {
@@ -649,6 +663,16 @@
         display: inline-block;
         font-style: italic;
         line-height: 1.5;
+        transition-duration: 0.2s;
+    }
+
+    .specialschedule:hover {
+        width: 200px;
+        letter-spacing: 2.2pt;
+        cursor: none;
+        filter: invert(100%) hue-rotate(180deg) saturate(110%);
+        height: 30px;
+        line-height: 1.8;
     }
 
     .sstomorrow {
@@ -664,7 +688,7 @@
         width: 300px;
         z-index: 40;
         border-radius: 20px;
-        font-size: 20px;
+        font-size: 16px;
         padding: 30px;
         float: right;
         position: absolute;
@@ -673,12 +697,12 @@
         text-align: center;
         box-shadow: 10px 10px rgb(65, 65, 91);
         transition-duration: 0.2s;
-        display: none; /* the world's not ready! */
+        /*display: none; /* the world's not ready! */
     }
 
     .announcement:hover {
         background-color: #cacaff;
-        font-size: 24px;
+        font-size: 20px;
         width: 390px;
     }
 
