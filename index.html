@@ -27,7 +27,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Righteous&family=Barlow+Semi+Condensed:wght@400;700&display=swap" rel="stylesheet" />
     <title>kehillah.today</title>
-    <script src="dates.js?v=3"></script>
+    <script src="dates.js?v=4"></script>
 </head>
 
 <body class="unselectable">
@@ -44,14 +44,9 @@
 
     <p id="announcement" class="announcement"><span style="font-size: 24px; font-weight: bold;">Announcement</span><br><br><span style="line-height: 1.2em">
 
-        <b>Picture Day</b><br>
-        Senior Sign up:  Book now!<br>Email sent from Still Light Studios.<br><br>
-        Picture Day: October 20, 2022.<br>
-        Retake Day: November 10, 2022 (11 AM &ndash; 1 PM).<br>
-        <br>Register <a href="https://docs.google.com/forms/d/e/1FAIpQLSfcdEY1oXb7ULRWxrsqGzJjkCRYU82IMg-QYb721CCUXVbncg/viewform" target="_blank">Retake Form</a><br><br>
-        
-        More information <a href="https://kehillah.org/kjhs_yearbook/" target="_blank">here</a>.<br>
-        Contact Ms. Chouhan if you have any questions concerning the yearbook or pictures. kchouhan@kehillah.org
+        <b>The special schedule has changed.</b><br>
+        If you're reading this announcement, your schedule has automatically updated to the new schedule, but other users' devices might not have made the switch!<br>
+        My sincerest apologies for the inconvenience.
 
     </span><br><br><br><span class="button" onclick="dismissAnnouncement()">Dismiss</span><br><br><span style="font-size: 12px; font-style: italic; color: #335; cursor: pointer;" onclick="iHateAnnouncements()">Never show me announcements again</span></p>
 
@@ -128,7 +123,7 @@
     <span>Data sourced from the <a href="https://kehillah.org/wp-content/uploads/2022/08/MasterSchedule22_23.jpg" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">Kehillah master schedule</span></a> and <a href="https://kehillah.org/wp-content/uploads/2022/07/One_Cal_22_23.pdf" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">one-page calendar</span></a>.</span><br>
     <span><span style="font-family: Righteous">kehillah.today</span> is not affiliated with <a href="https://kehillah.org/" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">kehillah.org</span></a>.</span><br>
     <span>Fonts used: <span style="font-family: Righteous">Righteous</span>, <span style="font-family: Bebas Neue">Bebas Neue</span>, and Barlow Semi Condensed.</span><br>
-    <span id="version">v0.5.2b &mdash; October 23, 2022</span><br>
+    <span id="version">v0.5.2c &mdash; October 26, 2022</span><br>
     <span></p>
     <script>
         minutes = 0;
@@ -397,10 +392,10 @@
 
         function dismissAnnouncement() {
             document.getElementById('announcement').style.display = "none";
-            localStorage.setItem('announcement-pd','viewed');
+            localStorage.setItem('announcement-oops0','viewed');
         }
 
-        if(localStorage.getItem('announcement-pd') == 'viewed' || localStorage.getItem('announcements') == 'none') {
+        if(localStorage.getItem('announcement-oops0') == 'viewed' || localStorage.getItem('announcements') == 'none') {
             document.getElementById('announcement').style.display = "none";
         }
 
@@ -697,7 +692,7 @@
         text-align: center;
         box-shadow: 10px 10px rgb(65, 65, 91);
         transition-duration: 0.2s;
-        display: none; /* no more! */
+        /*display: none; /* no announcement needed! */
     }
 
     .announcement:hover {
@@ -789,6 +784,7 @@
         padding: 3px;
         text-align: center;
         -webkit-appearance: none;
+        appearance: none;
         background-color: #eef;
         font-family: 'Barlow Semi Condensed';
         font-variant-numeric: tabular-nums;
