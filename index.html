@@ -32,14 +32,14 @@
 
 <body class="unselectable">
     <p class="logo" style="margin: 20px 0px 5px 20px; cursor: pointer" onClick="easterEgg()">
-        <span style="color: #414256">kehillah</span><span style="color: #9590a5">.</span><span
+        <span class="normaltext">kehillah</span><span style="color: #9590a5">.</span><span
             style="color: #cc3333">today</span>
     </p>
 
 <p style="margin: 0px 0px 0px 20px; line-height: 1.5;">
-        <i><span style="color: #414256"><span id="todayis"><noscript>JavaScript is disabled. This website will not function until you enable it.</noscript></span><span id="howstheschedule"></span></i><br>
+        <i><span class="normaltext"><span id="todayis"><noscript>JavaScript is disabled. This website will not function until you enable it.</noscript></span><span id="howstheschedule"></span></i><br>
         <span class="specialschedule" id="spectoday" style="display: none">SPECIAL SCHEDULE</span>
-        <i><span style="color: #414256"><span id="todayis"><noscript>Learn how to enable JavaScript in your browser <a href="https://enable-javascript.com">here</a>.</noscript></span><span id="currenttime"></span></i>
+        <i><span class="normaltext"><span id="todayis"><noscript>Learn how to enable JavaScript in your browser <a href="https://enable-javascript.com">here</a>.</noscript></span><span id="currenttime"></span></i>
     </p>
 
     <p id="announcement" class="announcement"><span style="font-size: 24px; font-weight: bold;">Announcement</span><br><br><span style="line-height: 1.2em">
@@ -57,7 +57,7 @@
     
 
     <p class="logo" >
-        <span style="color: #414256">kehillah</span><span style="color: #9590a5">.</span><span
+        <span class="normaltext">kehillah</span><span style="color: #9590a5">.</span><span
             style="color: #cc9933">upcoming</span>
     </p>
 
@@ -68,7 +68,7 @@
     <br class="small">
 
     <p class="logo">
-        <span style="color: #414256">kehillah</span><span style="color: #9590a5">.</span><span
+        <span class="normaltext">kehillah</span><span style="color: #9590a5">.</span><span
             style="color: #3399cc">tomorrow</span><span class="specialschedule sstomorrow" id="spectomorrow" style="display: none">SPECIAL SCHEDULE</span>
 
     </p>
@@ -81,7 +81,7 @@
     <br class="small">
 
     <p class="logo" style="display: none">
-        <span style="color: #414256">kehillah</span><span style="color: #9590a5">.</span><span
+        <span class="normaltext">kehillah</span><span style="color: #9590a5">.</span><span
             style="color: #9933cc">future</span>
     </p>
 
@@ -118,12 +118,19 @@
         Hide Passing Periods
     </button></p>
 
+    
+    <span class="hidden">
+    <p><label for="togglewarning" style="margin: 0px -15px 0px 20px">Class-ending Color Change:</label><button class="button" onclick="PanicMode()" id="togglewarning">
+        OFF
+    </button></p>
+</span>
+
     <p id="credits" style="color:#8080a2; margin: 20px; font-size: 17px;" class="lines">
     <span>Created by B. Gill. Contact me at <a href="mailto: bgill2023@kehillahstudent.org"><span style="color: #8080a2">bgill2023@kehillahstudent.org</span></a>.</span><br>
     <span>Data sourced from the <a href="https://kehillah.org/wp-content/uploads/2022/08/MasterSchedule22_23.jpg" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">Kehillah master schedule</span></a> and <a href="https://kehillah.org/wp-content/uploads/2022/07/One_Cal_22_23.pdf" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">one-page calendar</span></a>.</span><br>
     <span><span style="font-family: Righteous">kehillah.today</span> is not affiliated with <a href="https://kehillah.org/" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">kehillah.org</span></a> or the <a href="https://apps.apple.com/app/kehillah-today/id6443492717" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">mobile app</span></a> with the same name.</span><br>
     <span>Fonts used: <span style="font-family: Righteous">Righteous</span>, <span style="font-family: Bebas Neue">Bebas Neue</span>, and Barlow Semi Condensed.</span><br>
-    <span id="version">v0.5.4 &mdash; November 15, 2022</span><br>
+    <span id="version">v0.5.4a &mdash; November 16, 2022</span><br>
     <span></p>
     <script>
         minutes = 0;
@@ -140,6 +147,7 @@
 
         var eventnames = ["Passing Period","Block 1","Block 2","Block 3","Block 4","Block 5","Block 6","Block 7","Block 8","Block 9","Lunch","Reflective Practice","Kab Shab","Beit Midrash / Seminar","Advisory"]
         var eventnames_short = ["PASS","B1","B2","B3","B4","B5","B6","B7","B8","B9","LUN","RP","KS","SEM","ADV"]
+        var eventnames_future = ["?!", "1", "2", "3", "4", "5", "6", "7", "8", "9", "Lunch", "RP", "Kab Shab", "Beit Midrash"]
         var correctjsondata = "";
         var total = 0
         var tomorrowtotal = 0
@@ -577,6 +585,24 @@
             }
         }
 
+        function changeColors(colorname) {
+            var elements = document.getElementsByClassName('normaltext');
+            console.log(elements);
+            for(var i = 0; i < elements.length; i++){
+                elements[i].style.color = "var(--" + colorname + ")";
+                console.log(elements[i]);
+            }
+            var elements = document.getElementsByClassName('display');
+            for(var i = 0; i < elements.length; i++){
+                elements[i].style.color = "var(--" + colorname + ")";
+                console.log(elements[i]);
+            }
+
+            document.body.style.backgroundColor = "var(--bg" + colorname + ")";
+
+
+        }
+
         function CheckYourself() {
             if(localStorage.getItem('passVisible') == "false" || localStorage.getItem('passVisible') == false) {
             passingperiodsvisible = false;
@@ -643,9 +669,8 @@
         font-family: 'Bebas Neue'; /* awesome font */
         margin: 10px 40px 10px 40px;
         text-align: center;
-        color: #335;
+        color: var(--normal);
         line-height: 1;
-        transition-duration: 0.2s;
     }
 
     .specialschedule {
@@ -822,6 +847,23 @@
 
     .hidden {
         display: none;
+    }
+
+    .normaltext {
+        color: #414256;
+    }
+
+    :root {
+        --normal: #335;
+        --warning: #884;
+        --panic: #300;
+        --bgnormal: #eef;
+        --bgwarning: #ffc;
+        --bgpanic: #d88;
+    }
+
+    * {
+        transition-duration: 0.2s;
     }
 
 </style>
