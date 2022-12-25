@@ -1,0 +1,44 @@
+body {
+    background-color: #22136F;
+}
+
+* {
+    color: #ff0931;
+    text-align: center;
+}
+
+span, h1, h2, h3, h4, h5, h6 {
+    background: #ffffff;
+}
+
+h2 {
+    font-weight: normal;
+}
+
+.blue {
+    color: blue;
+}
+
+.green {
+    color: #24BC50;
+}
+
+.gold {
+    color: #da0;
+}
+
+.red {
+    color: #ff0931;
+}
+
+.black {
+    color: black;
+}
+
+.teal {
+    color: #35dca9;
+}
+
+.white {
+    color: #eee;
+}
