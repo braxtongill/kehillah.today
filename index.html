@@ -44,9 +44,9 @@
 
     <p id="announcement" class="announcement"><span style="font-size: 24px; font-weight: bold;">Announcement</span><br><br><span style="line-height: 1.2em">
 
-        <b>The special schedule has changed.</b><br>
-        If you're reading this announcement, your schedule has automatically updated to the new schedule, but other users' devices might not have made the switch!<br>
-        My sincerest apologies for the inconvenience.
+        <b>Bring a negative COVID antigen test to school on Monday (January 9<sup>th</sup>).</b><br>
+        Both selfies with a test result and an in-person test will be accepted.<br><br>
+        <i>Additionally, your schedule may have changed since last semester! Be sure to update your blocks accordingly.</i>
 
     </span><br><br><br><span class="button" onclick="dismissAnnouncement()">Dismiss</span><br><br><span style="font-size: 12px; font-style: italic; color: #335; cursor: pointer;" onclick="iHateAnnouncements()">Never show me announcements again</span></p>
 
@@ -118,19 +118,16 @@
         Hide Passing Periods
     </button></p>
 
-    
-    <span class="hidden">
-    <p><label for="togglewarning" style="margin: 0px -15px 0px 20px">Class-ending Color Change:</label><button class="button" onclick="PanicMode()" id="togglewarning">
-        OFF
+    <p><label for="togglewarning" style="margin: 0px -15px 0px 20px">Color Changes:</label><button class="button" onclick="PanicMode()" id="togglewarning">
+        ON
     </button></p>
-</span>
 
-    <p id="credits" style="color:#8080a2; margin: 20px; font-size: 17px;" class="lines">
+    <p id="credits" style="margin: 20px; font-size: 17px;" class="lines normaltext">
     <span>Created by B. Gill. Contact me at <a href="mailto: bgill2023@kehillahstudent.org"><span style="color: #8080a2">bgill2023@kehillahstudent.org</span></a>.</span><br>
     <span>Data sourced from the <a href="https://kehillah.org/wp-content/uploads/2022/08/MasterSchedule22_23.jpg" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">Kehillah master schedule</span></a> and <a href="https://kehillah.org/wp-content/uploads/2022/07/One_Cal_22_23.pdf" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">one-page calendar</span></a>.</span><br>
     <span><span style="font-family: Righteous">kehillah.today</span> is not affiliated with <a href="https://kehillah.org/" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">kehillah.org</span></a> or the <a href="https://apps.apple.com/app/kehillah-today/id6443492717" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">mobile app</span></a> with the same name.</span><br>
     <span>Fonts used: <span style="font-family: Righteous">Righteous</span>, <span style="font-family: Bebas Neue">Bebas Neue</span>, and Barlow Semi Condensed.</span><br>
-    <span id="version">v0.5.4b — December 10, 2022</span><br>
+    <span id="version">v0.6.0 — January 8th, 2023</span><br>
     <span></p>
     <script>
         minutes = 0;
@@ -142,8 +139,9 @@
         var ftrigger = -1;
         var theschedule = ""
         var tomorrowschedule = ""
-        var blockcolors = ["#c6c6d6","#6ec0d6","#8d7cc2","#c17ba0","#e06665","#2aa3ac","#d64087","#b4a7d5","#9fc5e9","#d6a6be","#aaccaa","#c9ccaa","#6c91d9","#cfcf86", "#c288a2"] /* #0 is misc, 1-9 are blocks, 10 is lunch, 11 is RP, 12 is Kab Shab, 13 is Beit Midrash / Seminar, 14 is Advisory */
+        var blockcolors = ["rgba(198, 198, 218, 0.8)","#6ec0d6","#8d7cc2","#c17ba0","#e06665","#2aa3ac","#d64087","#b4a7d5","#9fc5e9","#d6a6be","#aaccaa","#c9ccaa","#6c91d9","#cfcf86", "#c288a2"] /* #0 is misc, 1-9 are blocks, 10 is lunch, 11 is RP, 12 is Kab Shab, 13 is Beit Midrash / Seminar, 14 is Advisory */
         var blockcolorsdark = [];
+        var minleft; // minutes until next event;
 
         var eventnames = ["Passing Period","Block 1","Block 2","Block 3","Block 4","Block 5","Block 6","Block 7","Block 8","Block 9","Lunch","Reflective Practice","Kab Shab","Beit Midrash / Seminar","Advisory"]
         var eventnames_short = ["PASS","B1","B2","B3","B4","B5","B6","B7","B8","B9","LUN","RP","KS","SEM","ADV"]
@@ -163,6 +161,7 @@
         var noschooltomorrow = false;
 
         var passingperiodsvisible = true;
+        var panic = true; // panic mode
         var nexteventtime = 0;
         var cookiejar = [];
         var istheClassNameformvisible = false;
@@ -189,6 +188,32 @@
                 document.getElementById('ClassForm').style.display = "none"
                 istheClassNameformvisible = false;
             }
+        }
+
+        function PanicMode(custompanic) { // toggles "panic mode," which is when the screen changes colors depending on how late you are
+        if(custompanic == true || custompanic == false) panic = !custompanic; // if an argument is supplied for custompanic then use it
+            if(panic) { 
+                panic = false;
+                togglewarning.innerText = "OFF";
+                localStorage.setItem('panic','false');
+            } else {
+                panic = true;
+                togglewarning.innerText = "ON";
+                localStorage.setItem('panic','true');
+            }
+        }
+
+        function updateColor() { // changes the color when class is about to end 
+            if(panic) {
+              if(trigger == 0 || start == EventsToLoad) return "normal";
+              else {
+                if(datedata[theschedule]['events'][trigger - 1]['name'] == "Passing Period") return "passing"; // return gray if it's in a passing period
+                else if(minleft > 5) return "normal";
+                else if(minleft > 2) return "warning"; 
+                else if(minleft > 0) return "panic";
+              }
+            }
+            return "normal";
         }
 
         function PassingPeriods() { //what happens when you click the "Hide/Show Passing Periods" button
@@ -400,10 +425,10 @@
 
         function dismissAnnouncement() {
             document.getElementById('announcement').style.display = "none";
-            localStorage.setItem('announcement-oops0','viewed');
+            localStorage.setItem('announcement-2023-01-09','viewed');
         }
 
-        if(localStorage.getItem('announcement-oops0') == 'viewed' || localStorage.getItem('announcements') == 'none') {
+        if(localStorage.getItem('announcement-2023-01-09') == 'viewed' || localStorage.getItem('announcements') == 'none') {
             document.getElementById('announcement').style.display = "none";
         }
 
@@ -413,7 +438,7 @@
         }
 
 
-        function NextEventTime() { // when's the next event? good for updating the clock when there's nothing going on.
+        function NextEventTime() { // when's the next event (that's not today)? good for updating the clock when there's nothing going on.
             for(search = 1; search < 50; search++) { // check the next 50 days
                 var day = new Date();
                 //console.log(search)
@@ -460,22 +485,23 @@
                     }
         }
 
-            if(noschool == true || start === EventsToLoad) {
+            if(noschool == true || start === EventsToLoad) { // if there's no school or we've ran through all of today's events
             document.getElementById('upcomingblock').style.display = "block"
             if(noschool === false) {
             document.getElementById('upcomingnotice').innerText = "No more events today."
             }
-            document.getElementById('clock').innerText = UpdateClock(NextEventTime())
-            document.title = (UpdateClock(NextEventTime) + " " + "| kehillah.today")
-
+            minleft = NextEventTime();
+            document.getElementById('clock').innerText = UpdateClock(minleft)
+            document.title = (UpdateClock(minleft) + " " + "| kehillah.today")
             } else {
-            document.getElementById('clock').innerText = UpdateClock(datedata[theschedule]['events'][trigger]['timestamp'] - minutes)
-            document.title = (UpdateClock(datedata[theschedule]['events'][trigger]['timestamp'] - minutes) + " | kehillah.today")
+            minleft = datedata[theschedule]['events'][trigger]['timestamp'] - minutes;
+            document.getElementById('clock').innerText = UpdateClock(minleft);
+            document.title = (UpdateClock(minleft) + " | kehillah.today")
             }
             if(trigger <= 0) {
-            document.getElementById('whatsup').innerHTML = dasharray[dashes] + "&emsp; FREE &emsp;" + dasharray[dashes]
+                document.getElementById('whatsup').innerHTML = dasharray[dashes] + "&emsp; FREE &emsp;" + dasharray[dashes]
             } else {
-            document.getElementById('whatsup').innerHTML = dasharray[dashes] + "&emsp;" + CustomEventName(datedata[theschedule]['events'][trigger - 1]['name']) + "&emsp;" + dasharray[dashes]
+                document.getElementById('whatsup').innerHTML = dasharray[dashes] + "&emsp;" + CustomEventName(datedata[theschedule]['events'][trigger - 1]['name']) + "&emsp;" + dasharray[dashes]
             }
             document.getElementById('currenttime').innerHTML = CurrentTime()
             if(!(pageloaddate == dnow.getDate())) {
@@ -515,8 +541,8 @@
                 div.classList.add('event');
                 div.innerHTML = ("Loading...");
                 div.style.padding = "15px";
+                div.style.marginBottom = "2px";
                 div.style.backgroundColor = "#9590a5";
-                div.style.boxShadow = "0px 0px 0px 2px #eef";  
                 div.style.textAlign = "left";
                 div.style.fontSize = "1.5em"
                 div.style.lineHeight = "100%"
@@ -560,7 +586,7 @@
                 div.style.padding = "15px";
                 div.classList.add('event');
                 div.style.backgroundColor = "#9590a5";
-                div.style.boxShadow = "0px 0px 0px 2px #eef";  
+                div.style.marginBottom = "2px";
                 div.style.textAlign = "left";
                 div.style.fontSize = "1.5em"
                 div.style.lineHeight = "100%"
@@ -574,7 +600,7 @@
             }
         }
 
-        function searchFuture() {
+        function searchFuture() { // spit out a list of upcoming schedules
             for (b = 1; b < 300; b++) {
                 datesearch = new Date()
                 datesearch.setDate(dnow.getDate() + b)
@@ -585,17 +611,17 @@
             }
         }
 
-        function changeColors(colorname) {
+        function changeColor(colorname = updateColor()) { // change all of the colors in the document
             var elements = document.getElementsByClassName('normaltext');
-            console.log(elements);
+            //console.log(elements);
             for(var i = 0; i < elements.length; i++){
                 elements[i].style.color = "var(--" + colorname + ")";
-                console.log(elements[i]);
+                //console.log(elements[i]);
             }
             var elements = document.getElementsByClassName('display');
             for(var i = 0; i < elements.length; i++){
                 elements[i].style.color = "var(--" + colorname + ")";
-                console.log(elements[i]);
+                //console.log(elements[i]);
             }
 
             document.body.style.backgroundColor = "var(--bg" + colorname + ")";
@@ -642,21 +668,16 @@
             }
         }
         
-        
-        /*if(localStorage.getItem('SPOOKY') == 'true') {
-            document.body.style.background = "#fa9111";
-            var blockcolors = ["#d35721","#6ec0d6","#8d7cc2","#c17ba0","#e06665","#2aa3ac","#d64087","#b4a7d5","#9fc5e9","#d6a6be","#aaccaa","#c9ccaa","#6c91d9","#cfcf86", "#c288a2"] /* #0 is misc, 1-9 are blocks, 10 is lunch, 11 is RP, 12 is Kab Shab, 13 is Beit Midrash / Seminar, 14 is Advisory */
-        /*    for(i = 0; i < document.getElementsByClassName('event').length; i++) {
-            document.getElementsByClassName('event')[i].style.boxShadow = "0px 0px 0px 2px #fa9111" 
-            }
-        }*/
-        }//these ending "}"s are the bane of my existence. 
+        if(localStorage.getItem('panic') == false || localStorage.getItem('panic') == "false") PanicMode(false);
+        else PanicMode(true); // if the user doesn't have a PanicMode localStorage, default to true
+        } //these ending "}"s are the bane of my existence. 
 
         MakeEverything() // When the code began to create elements and time—
         MakeTomorrow()   // the website being unformed and void, with darkness over the surface of the page and pure emptiness covering its elements—
         CheckYourself()  // The code said, “bro go check yourself”; and the page checked itself. 
 
         setInterval(UpdateTimer, 58)
+        setInterval(changeColor, 1000)
     </script>
 
 </body>
@@ -720,7 +741,7 @@
         text-align: center;
         box-shadow: 10px 10px rgb(65, 65, 91);
         transition-duration: 0.2s;
-        display: none; /* no announcement needed! */
+        /* display: none; /* no announcement needed! */
     }
 
     .announcement:hover {
@@ -855,11 +876,13 @@
 
     :root {
         --normal: #335;
-        --warning: #884;
+        --warning: #553;
         --panic: #300;
+        --passing: #555;
         --bgnormal: #eef;
         --bgwarning: #ffc;
-        --bgpanic: #d88;
+        --bgpanic: #fcc;
+        --bgpassing: #eee;
     }
 
     * {

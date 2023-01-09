@@ -44,17 +44,17 @@
 
     <p id="announcement" class="announcement"><span style="font-size: 24px; font-weight: bold;">Announcement</span><br><br><span style="line-height: 1.2em">
 
-        <b>Bring a negative COVID antigen test to school on Monday (January 9<sup>th</sup>).</b><br>
-        Both selfies with a test result and an in-person test will be accepted.<br><br>
-        <i>Additionally, your schedule may have changed since last semester! Be sure to update your blocks accordingly.</i>
+        <b>The special schedule has changed.</b><br>
+        If you're reading this announcement, your schedule has automatically updated to the new schedule, but other users' devices might not have made the switch!<br>
+        My sincerest apologies for the inconvenience.
 
     </span><br><br><br><span class="button" onclick="dismissAnnouncement()">Dismiss</span><br><br><span style="font-size: 12px; font-style: italic; color: #335; cursor: pointer;" onclick="iHateAnnouncements()">Never show me announcements again</span></p>
 
-
     <p class="display above-clock" id="whatsup"></p>
 
+    <p class="display above-clock" id="sound">Click to enable sound</p>
+
     <p class="display clock" id="clock"></p>
-    
 
     <p class="logo" >
         <span class="normaltext">kehillah</span><span style="color: #9590a5">.</span><span
@@ -70,7 +70,6 @@
     <p class="logo">
         <span class="normaltext">kehillah</span><span style="color: #9590a5">.</span><span
             style="color: #3399cc">tomorrow</span><span class="specialschedule sstomorrow" id="spectomorrow" style="display: none">SPECIAL SCHEDULE</span>
-
     </p>
 
 
@@ -425,10 +424,10 @@
 
         function dismissAnnouncement() {
             document.getElementById('announcement').style.display = "none";
-            localStorage.setItem('announcement-2023-01-09','viewed');
+            localStorage.setItem('announcement-oops0','viewed');
         }
 
-        if(localStorage.getItem('announcement-2023-01-09') == 'viewed' || localStorage.getItem('announcements') == 'none') {
+        if(localStorage.getItem('announcement-oops0') == 'viewed' || localStorage.getItem('announcements') == 'none') {
             document.getElementById('announcement').style.display = "none";
         }
 
@@ -670,7 +669,7 @@
         
         if(localStorage.getItem('panic') == false || localStorage.getItem('panic') == "false") PanicMode(false);
         else PanicMode(true); // if the user doesn't have a PanicMode localStorage, default to true
-        } //these ending "}"s are the bane of my existence. 
+        }//these ending "}"s are the bane of my existence. 
 
         MakeEverything() // When the code began to create elements and time—
         MakeTomorrow()   // the website being unformed and void, with darkness over the surface of the page and pure emptiness covering its elements—
@@ -678,6 +677,30 @@
 
         setInterval(UpdateTimer, 58)
         setInterval(changeColor, 1000)
+        setInterval(holcombSong, 500)
+
+        var timein = 3;
+        var timeout = 2;
+        var song = new Audio("ending2.mp3");
+        var songpaused = true;
+        function holcombSong() {
+            if(minleft < timein && minleft > timeout) {
+                song.play();
+                songpaused = false;
+                if (minleft > (timein + timeout) / 2) song.volume = (3 * timein - 3 * minleft)>1?1:(timein * 3 - minleft * 3)
+                else song.volume = (3 * minleft - 3 * timeout)>1?1:(3 * minleft - 3 * timeout)
+            } else if(!songpaused) {
+                song.pause();
+                songpaused = true;
+                song.currentTime = 0;
+            }
+        }
+
+        function hideSound() {
+            document.getElementById('sound').style.display = "none"
+        }
+
+        document.body.addEventListener('click', hideSound, true); 
     </script>
 
 </body>
@@ -741,7 +764,7 @@
         text-align: center;
         box-shadow: 10px 10px rgb(65, 65, 91);
         transition-duration: 0.2s;
-        /* display: none; /* no announcement needed! */
+        display: none; /* no announcement needed! */
     }
 
     .announcement:hover {
