@@ -53,6 +53,8 @@
 
     <p class="display above-clock" id="whatsup"></p>
 
+    <p class="display above-clock" id="reloadwhy">test reload</p>
+
     <p class="display clock" id="clock"></p>
     
 
@@ -298,7 +300,7 @@
             cookiejar.push(removeBrokenCharacters(document.getElementsByClassName('classinput')[i].value))  
             }
             localStorage.setItem("classes", cookiejar.toString());
-            location.reload()
+            document.getElementById('reloadwhy').innerText = "saved cookies (" + Date.now() + ")"
         }
 
         function cookieToClasses() { // converts the localStorage to the class names
@@ -506,7 +508,7 @@
             document.getElementById('currenttime').innerHTML = CurrentTime()
             if(!(pageloaddate == dnow.getDate())) {
                 if(Math.floor(Math.random() * 20) == 0) { // prevents the page from reloading every 0.058 seconds, causing it to freak out and die
-                location.reload();
+                    document.getElementById('reloadwhy').innerText = "dates unequal: " + pageloaddate + " doesn't equal " + dnow.getDate() + " (" + Date.now() + ")";
                 }
             }
         }   
