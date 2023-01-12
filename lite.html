@@ -27,13 +27,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Righteous&family=Barlow+Semi+Condensed:wght@400;700&display=swap" rel="stylesheet" />
     <title>kehillah.today</title>
-    <script src="dates.js?v=7"></script>
+    <script src="dates.js?v=6"></script>
 </head>
 
 <body class="unselectable">
     <p class="logo" style="margin: 20px 0px 5px 20px; cursor: pointer" onClick="easterEgg()">
         <span class="normaltext">kehillah</span><span style="color: #9590a5">.</span><span
-            style="color: #cc3333">today</span>
+            style="color: #cc3333">today</span><span class="specialschedule lite">LITE</span>
     </p>
 
 <p style="margin: 0px 0px 0px 20px; line-height: 1.5;">
@@ -122,16 +122,12 @@
         ON
     </button></p>
 
-    <p><label for="toggleblocktab" style="margin: 0px -15px 0px 20px">Block Name in Tab:</label><button class="button" onclick="BlockTab()" id="toggleblocktab">
-        ON
-    </button></p>
-
     <p id="credits" style="margin: 20px; font-size: 17px;" class="lines normaltext">
     <span>Created by B. Gill. Contact me at <a href="mailto: bgill2023@kehillahstudent.org"><span style="color: #8080a2">bgill2023@kehillahstudent.org</span></a>.</span><br>
     <span>Data sourced from the <a href="https://kehillah.org/wp-content/uploads/2022/08/MasterSchedule22_23.jpg" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">Kehillah master schedule</span></a> and <a href="https://kehillah.org/wp-content/uploads/2022/07/One_Cal_22_23.pdf" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">one-page calendar</span></a>.</span><br>
     <span><span style="font-family: Righteous">kehillah.today</span> is not affiliated with <a href="https://kehillah.org/" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">kehillah.org</span></a> or the <a href="https://apps.apple.com/app/kehillah-today/id6443492717" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">mobile app</span></a> with the same name.</span><br>
     <span>Fonts used: <span style="font-family: Righteous">Righteous</span>, <span style="font-family: Bebas Neue">Bebas Neue</span>, and Barlow Semi Condensed.</span><br>
-    <span id="version">v0.6.2 — January 11th, 2023</span><br>
+    <span id="version">v0.6.0 — January 8th, 2023</span><br>
     <span></p>
     <script>
         minutes = 0;
@@ -146,7 +142,6 @@
         var blockcolors = ["rgba(198, 198, 218, 0.8)","#6ec0d6","#8d7cc2","#c17ba0","#e06665","#2aa3ac","#d64087","#b4a7d5","#9fc5e9","#d6a6be","#aaccaa","#c9ccaa","#6c91d9","#cfcf86", "#c288a2"] /* #0 is misc, 1-9 are blocks, 10 is lunch, 11 is RP, 12 is Kab Shab, 13 is Beit Midrash / Seminar, 14 is Advisory */
         var blockcolorsdark = [];
         var minleft; // minutes until next event;
-        var currentevent; // current event
 
         var eventnames = ["Passing Period","Block 1","Block 2","Block 3","Block 4","Block 5","Block 6","Block 7","Block 8","Block 9","Lunch","Reflective Practice","Kab Shab","Beit Midrash / Seminar","Advisory"]
         var eventnames_short = ["PASS","B1","B2","B3","B4","B5","B6","B7","B8","B9","LUN","RP","KS","SEM","ADV"]
@@ -167,8 +162,6 @@
 
         var passingperiodsvisible = true;
         var panic = true; // panic mode
-        var blocktab = true; // block name in tab
-        var newpanicoff = false; // whether the user has recently changed "Color Changes" to "Off"
         var nexteventtime = 0;
         var cookiejar = [];
         var istheClassNameformvisible = false;
@@ -203,42 +196,24 @@
                 panic = false;
                 togglewarning.innerText = "OFF";
                 localStorage.setItem('panic','false');
-                newpanicoff = true;
             } else {
                 panic = true;
                 togglewarning.innerText = "ON";
                 localStorage.setItem('panic','true');
-                newpanicoff = false;
-            }
-        }
-
-        function BlockTab(customblock) { // toggles showing the block name in the tab
-            if(customblock == true || customblock == false) blocktab = !customblock;
-            if(blocktab) {
-                blocktab = false;
-                toggleblocktab.innerText = "OFF";
-                localStorage.setItem('blocktab','false');
-            } else {
-                blocktab = true;
-                toggleblocktab.innerText = "ON";
-                localStorage.setItem('blocktab','true');
             }
         }
 
         function updateColor() { // changes the color when class is about to end 
             if(panic) {
-              if(!(trigger == 0 || start == EventsToLoad) && datedata[theschedule]['events'][trigger - 1]['name'] == "Passing Period") return "passing";
+              if(start == EventsToLoad) return "normal";
               else {
-                if(minleft > 5) return "normal";
-                if(minleft > 2) return "warning"; 
-                if(minleft > 0) return "panic";
+                if(trigger > 0 && datedata[theschedule]['events'][trigger - 1]['name'] == "Passing Period") return "passing"; // return gray if it's in a passing period
+                else if(minleft > 5) return "normal";
+                else if(minleft > 2) return "warning"; 
+                else if(minleft > 0) return "panic";
               }
             }
-            if(newpanicoff) {
-                newpanicoff = false;
-                return "normal";
-            }
-            return false;
+            return "normal";
         }
 
         function PassingPeriods() { //what happens when you click the "Hide/Show Passing Periods" button
@@ -296,9 +271,6 @@
         function MakeFunTimestamps(convert) { // converts the minutes offset into a timestamp
             if (convert <= 0) { // if negative time until the class
                 convertible = "Passed!";
-            } else if (convert <= 1) { // if less than 1 minute
-                convertible =
-                (((convert) * 60).toFixed(2) + "s");
             } else if (convert <= 60) { // if less than 60 minutes
                 convertible =
                 (Math.floor((convert))) +
@@ -387,9 +359,6 @@
             //console.log(convert)
             if (convert <= 0) {
                 convertible = "";
-            } else if (convert <= 1) {
-                convertible =
-                apz(((convert) * 60).toFixed(2));
             } else if (convert <= 60) {
                 convertible =
                 apz(Math.floor((convert))) +
@@ -517,19 +486,17 @@
             }
             minleft = NextEventTime();
             document.getElementById('clock').innerText = UpdateClock(minleft)
-            document.title = (UpdateClock(minleft) + " " + (blocktab?(" | " + currentevent):"") + "| kehillah.today")
+            document.title = (UpdateClock(minleft) + " " + "| kehillah.today")
             } else {
             minleft = datedata[theschedule]['events'][trigger]['timestamp'] - minutes;
             document.getElementById('clock').innerText = UpdateClock(minleft);
-            document.title = (UpdateClock(minleft) + " " + (blocktab?(" | " + currentevent):"") + " | kehillah.today")
+            document.title = (UpdateClock(minleft) + " | kehillah.today")
             }
             if(trigger <= 0) {
-                currentevent = "Free";
+                document.getElementById('whatsup').innerHTML = dasharray[dashes] + "&emsp; FREE &emsp;" + dasharray[dashes]
             } else {
-                currentevent = datedata[theschedule]['events'][trigger - 1]['name'];
+                document.getElementById('whatsup').innerHTML = dasharray[dashes] + "&emsp;" + CustomEventName(datedata[theschedule]['events'][trigger - 1]['name']) + "&emsp;" + dasharray[dashes]
             }
-            document.getElementById('whatsup').innerHTML = dasharray[dashes] + "&emsp;" + CustomEventName(currentevent) + "&emsp;" + dasharray[dashes]
-
             document.getElementById('currenttime').innerHTML = CurrentTime()
             if(!(pageloaddate == dnow.getDate())) {
                 if(Math.floor(Math.random() * 20) == 0) { // prevents the page from reloading every 0.058 seconds, causing it to freak out and die
@@ -639,21 +606,21 @@
         }
 
         function changeColor(colorname = updateColor()) { // change all of the colors in the document
-            if(colorname != false) { // if there are colors to change
-                var elements = document.getElementsByClassName('normaltext');
-                //console.log(elements);
-                for(var i = 0; i < elements.length; i++){
-                    elements[i].style.color = "var(--" + colorname + ")";
-                    //console.log(elements[i]);
-                }
-                var elements = document.getElementsByClassName('display');
-                for(var i = 0; i < elements.length; i++){
-                    elements[i].style.color = "var(--" + colorname + ")";
-                    //console.log(elements[i]);
-                }
-
-                document.body.style.backgroundColor = "var(--bg" + colorname + ")";
+            var elements = document.getElementsByClassName('normaltext');
+            //console.log(elements);
+            for(var i = 0; i < elements.length; i++){
+                elements[i].style.color = "var(--" + colorname + ")";
+                //console.log(elements[i]);
             }
+            var elements = document.getElementsByClassName('display');
+            for(var i = 0; i < elements.length; i++){
+                elements[i].style.color = "var(--" + colorname + ")";
+                //console.log(elements[i]);
+            }
+
+            document.body.style.backgroundColor = "var(--bg" + colorname + ")";
+
+
         }
 
         function CheckYourself() {
@@ -703,7 +670,7 @@
         MakeTomorrow()   // the website being unformed and void, with darkness over the surface of the page and pure emptiness covering its elements—
         CheckYourself()  // The code said, “bro go check yourself”; and the page checked itself. 
 
-        setInterval(UpdateTimer, 58)
+        setInterval(UpdateTimer, 500)
         setInterval(changeColor, 1000)
     </script>
 
@@ -735,6 +702,7 @@
         font-style: italic;
         line-height: 1.5;
         transition-duration: 0.2s;
+        font-family: "Barlow Semi Condensed";
     }
 
     .specialschedule:hover {
@@ -754,6 +722,19 @@
         bottom: 5px;
     }
 
+    .lite {
+        background: linear-gradient(140deg, rgb(210, 210, 231) 0%, rgb(21, 222, 202) 100%);
+        margin: 0px 0px 0px 10px;
+        position: relative;
+        bottom: 5px;
+        width: 80px;
+    }
+
+    .lite:hover {
+        width: 80px;
+        filter: hue-rotate(180deg);
+    }
+
     .announcement {
         background-color: #babae6;
         width: 300px;
@@ -768,7 +749,7 @@
         text-align: center;
         box-shadow: 10px 10px rgb(65, 65, 91);
         transition-duration: 0.2s;
-        display: none; /* no announcement needed! */
+        /* display: none; /* no announcement needed! */
     }
 
     .announcement:hover {
