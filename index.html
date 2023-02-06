@@ -27,7 +27,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Righteous&family=Barlow+Semi+Condensed:wght@400;700&display=swap" rel="stylesheet" />
     <title>kehillah.today</title>
-    <script src="dates.js?v=8"></script>
+    <script src="dates.js?v=9"></script>
 </head>
 
 <body class="unselectable">
@@ -51,7 +51,7 @@
     </span><br><br><br><span class="button" onclick="dismissAnnouncement()">Dismiss</span><br><br><span style="font-size: 12px; font-style: italic; color: #335; cursor: pointer;" onclick="iHateAnnouncements()">Never show me announcements again</span></p>
 
 
-    <p class="display above-clock" id="whatsup"></p>
+    <p class="display above-clock"><span id="dashleft"></span>&emsp;<span id="whatsup"></span><span id="blockid" style="display: none">&ensp;<span class="blockid">1</span></span>&emsp;<span id="dashright"></span></p>
 
     <p class="display clock" id="clock"></p>
     
@@ -80,10 +80,13 @@
     
     <br class="small">
 
-    <p class="logo" style="display: none">
+    <p class="logo">
         <span class="normaltext">kehillah</span><span style="color: #9590a5">.</span><span
-            style="color: #9933cc">future</span>
+            style="color: #9933cc">future</span> <span class="specialschedule beta">BETA</span>
+
     </p>
+
+    <p id="futureevents"></p>
 
     <p><button class="button" onclick="ChangeClasses()">
         Rename Blocks
@@ -131,7 +134,7 @@
     <span>Data sourced from the <a href="https://kehillah.org/wp-content/uploads/2022/08/MasterSchedule22_23.jpg" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">Kehillah master schedule</span></a> and <a href="https://kehillah.org/wp-content/uploads/2022/07/One_Cal_22_23.pdf" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">one-page calendar</span></a>.</span><br>
     <span><span style="font-family: Righteous">kehillah.today</span> is not affiliated with <a href="https://kehillah.org/" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">kehillah.org</span></a> or the <a href="https://apps.apple.com/app/kehillah-today/id6443492717" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">mobile app</span></a> with the same name.</span><br>
     <span>Fonts used: <span style="font-family: Righteous">Righteous</span>, <span style="font-family: Bebas Neue">Bebas Neue</span>, and Barlow Semi Condensed.</span><br>
-    <span id="version">v0.6.2 — January 11th, 2023</span><br>
+    <span id="version">v0.6.3 — February 5th, 2023</span><br>
     <span></p>
     <script>
         minutes = 0;
@@ -448,6 +451,9 @@
             dashes = 0; // remove the dashes for mobile users because they got in the way
         }
 
+        document.getElementById('dashleft').innerText = dasharray[dashes]; // puts the dashes on the screen
+        document.getElementById('dashright').innerText = dasharray[dashes];
+
         function dismissAnnouncement() {
             document.getElementById('announcement').style.display = "none";
             localStorage.setItem('announcement-2023-01-09','viewed');
@@ -517,7 +523,7 @@
             }
             minleft = NextEventTime();
             document.getElementById('clock').innerText = UpdateClock(minleft)
-            document.title = (UpdateClock(minleft) + " " + (blocktab?(" | " + currentevent):"") + "| kehillah.today")
+            document.title = (UpdateClock(minleft) + " " + (blocktab?(" | " + currentevent):"") + " | kehillah.today")
             } else {
             minleft = datedata[theschedule]['events'][trigger]['timestamp'] - minutes;
             document.getElementById('clock').innerText = UpdateClock(minleft);
@@ -528,7 +534,7 @@
             } else {
                 currentevent = datedata[theschedule]['events'][trigger - 1]['name'];
             }
-            document.getElementById('whatsup').innerHTML = dasharray[dashes] + "&emsp;" + CustomEventName(currentevent) + "&emsp;" + dasharray[dashes]
+            document.getElementById('whatsup').innerHTML = CustomEventName(currentevent)
 
             document.getElementById('currenttime').innerHTML = CurrentTime()
             if(!(pageloaddate == dnow.getDate())) {
@@ -627,16 +633,28 @@
             }
         }
 
-        function searchFuture() { // spit out a list of upcoming schedules
-            for (b = 1; b < 300; b++) {
+        function searchFuture(html = false, condensed = false) { // spit out a list of upcoming schedules
+            var returnEvents = "";
+            var currentLook;
+            var specialDates = [];
+            for (b = 1; b < 100; b++) {
                 datesearch = new Date()
                 datesearch.setDate(dnow.getDate() + b)
-                scan = (datesearch.getFullYear() + "-" + apz(datesearch.getMonth() + 1) + "-" + apz(datesearch.getDate()))
+                scan = (datesearch.getFullYear() + "-" + apz(datesearch.getMonth() + 1) + "-" + apz(datesearch.getDate()));
                 if(CustomScheduleExists(scan)) {
-                    console.log(scan + " / " + datedata[scan]['message'])
+                    specialDates.push(scan);
+                    currentLook = datedata[scan]['message'];
+                    console.log(specialDates)
+                    console.log(scan + " / " + currentLook)
+                    if(condensed && html) if(!(specialDates.length > 1 && datedata[specialDates[specialDates.length - 2]]['message'] == datedata[scan]['message'])) returnEvents += (specialDates.length == 1?"":"<br>") /*removes the <br> when it's the first event*/ + "<b>" + currentLook + "</b> &mdash; " + scan; // if condensed mode is on, if the same event appears twice in a row, remove the duplicate
+                    if(!condensed && html) returnEvents += "<br><b>" + currentLook + "</b> &mdash; " + scan;
+                    console.log(returnEvents);
                 }
             }
+            if(html) return returnEvents;
         }
+
+        document.getElementById('futureevents').innerHTML = searchFuture(true, true);
 
         function changeColor(colorname = updateColor()) { // change all of the colors in the document
             if(colorname != false) { // if there are colors to change
@@ -735,6 +753,7 @@
         font-style: italic;
         line-height: 1.5;
         transition-duration: 0.2s;
+        font-family: 'Barlow Semi Condensed'
     }
 
     .specialschedule:hover {
@@ -752,6 +771,19 @@
         margin: 0px 0px 0px 20px;
         position: relative;
         bottom: 5px;
+    }
+
+    .beta {
+        background: linear-gradient(140deg, rgb(210, 210, 231) 0%, rgb(21, 222, 202) 100%);
+        margin: 0px 0px 0px 10px;
+        position: relative;
+        bottom: 5px;
+        width: 80px;
+    }
+
+    .beta:hover {
+        width: 80px;
+        filter: hue-rotate(180deg);
     }
 
     .announcement {
@@ -789,6 +821,16 @@
         font-family: 'Righteous';
         font-size: 30px;
         margin: 20px;
+    }
+
+    .blockid {
+        font-style: normal;
+        font-family: Barlow Semi Condensed;
+        color: white;
+        font-size: 30px;
+        background-color: rgb(110, 192, 214);
+        padding: 10px;
+        border-radius: 10px;
     }
 
     a {
@@ -853,6 +895,11 @@
 
     label {
         font-size: 18px;
+    }
+
+    #futureevents {
+        margin: 18px;
+        line-height: 1.5em;
     }
 
     .classsubmit {
