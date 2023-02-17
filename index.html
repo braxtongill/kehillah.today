@@ -44,9 +44,7 @@
 
     <p id="announcement" class="announcement"><span style="font-size: 24px; font-weight: bold;">Announcement</span><br><br><span style="line-height: 1.2em">
 
-        <b>Bring a negative COVID antigen test to school on Monday (January 9<sup>th</sup>).</b><br>
-        Both selfies with a test result and an in-person test will be accepted.<br><br>
-        <i>Additionally, your schedule may have changed since last semester! Be sure to update your blocks accordingly.</i>
+        <b>I was infomed by Kehillah administration that there was a special schedule today (Friday, February 17th), but I wasn't told what the schedule was.</b><br>kehillah.today may reload suddenly throughout the day until the special schedule's obtained. My apologies for the inconvenience.
 
     </span><br><br><br><span class="button" onclick="dismissAnnouncement()">Dismiss</span><br><br><span style="font-size: 12px; font-style: italic; color: #335; cursor: pointer;" onclick="iHateAnnouncements()">Never show me announcements again</span></p>
 
@@ -130,13 +128,13 @@
     </button></p>
 
     <p id="credits" style="margin: 20px; font-size: 17px;" class="lines normaltext">
-    <span>Created by B. Gill. Contact me at <a href="mailto: bgill2023@kehillahstudent.org"><span style="color: #8080a2">bgill2023@kehillahstudent.org</span></a>.</span><br>
+    <span>Created by B. Gill. Contact me at <a href="/cdn-cgi/l/email-protection#c3e3a1a4aaafaff1f3f1f083a8a6abaaafafa2abb0b7b6a7a6adb7edacb1a4"><span style="color: #8080a2"><span class="__cf_email__" data-cfemail="6c0e0b0500005e5c5e5f2c0709040500000d041f18190809021842031e0b">[email&#160;protected]</span></span></a>.</span><br>
     <span>Data sourced from the <a href="https://kehillah.org/wp-content/uploads/2022/08/MasterSchedule22_23.jpg" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">Kehillah master schedule</span></a> and <a href="https://kehillah.org/wp-content/uploads/2022/07/One_Cal_22_23.pdf" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">one-page calendar</span></a>.</span><br>
     <span><span style="font-family: Righteous">kehillah.today</span> is not affiliated with <a href="https://kehillah.org/" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">kehillah.org</span></a> or the <a href="https://apps.apple.com/app/kehillah-today/id6443492717" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">mobile app</span></a> with the same name.</span><br>
     <span>Fonts used: <span style="font-family: Righteous">Righteous</span>, <span style="font-family: Bebas Neue">Bebas Neue</span>, and Barlow Semi Condensed.</span><br>
     <span id="version">v0.6.3 — February 5th, 2023</span><br>
     <span></p>
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         minutes = 0;
         dnow = new Date(); //generates a date object
         var dotw = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"] //days of the week
@@ -456,10 +454,10 @@
 
         function dismissAnnouncement() {
             document.getElementById('announcement').style.display = "none";
-            localStorage.setItem('announcement-2023-01-09','viewed');
+            localStorage.setItem('announcement-2023-02-16','viewed');
         }
 
-        if(localStorage.getItem('announcement-2023-01-09') == 'viewed' || localStorage.getItem('announcements') == 'none') {
+        if(localStorage.getItem('announcement-2023-02-16') == 'viewed' || localStorage.getItem('announcements') == 'none') {
             document.getElementById('announcement').style.display = "none";
         }
 
@@ -721,8 +719,13 @@
         MakeTomorrow()   // the website being unformed and void, with darkness over the surface of the page and pure emptiness covering its elements—
         CheckYourself()  // The code said, “bro go check yourself”; and the page checked itself. 
 
+        function krug() {
+            location.reload();
+        }
+
         setInterval(UpdateTimer, 58)
         setInterval(changeColor, 1000)
+        setInterval(krug, 1800000); // did you REALLY have to wait until 7 am to give me the special schedule??
     </script>
 
 </body>
@@ -800,7 +803,7 @@
         text-align: center;
         box-shadow: 10px 10px rgb(65, 65, 91);
         transition-duration: 0.2s;
-        display: none; /* no announcement needed! */
+        /* display: none; /* no announcement needed! */
     }
 
     .announcement:hover {
