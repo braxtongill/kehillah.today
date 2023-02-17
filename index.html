@@ -27,7 +27,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Righteous&family=Barlow+Semi+Condensed:wght@400;700&display=swap" rel="stylesheet" />
     <title>kehillah.today</title>
-    <script src="dates.js?v=10"></script>
+    <script src="dates.js?v=11"></script>
 </head>
 
 <body class="unselectable">
@@ -44,7 +44,7 @@
 
     <p id="announcement" class="announcement"><span style="font-size: 24px; font-weight: bold;">Announcement</span><br><br><span style="line-height: 1.2em">
 
-        <b>I was infomed by Kehillah administration that there was a special schedule today (Friday, February 17th), but I wasn't told what the schedule was.</b><br>kehillah.today may reload suddenly throughout the day until the special schedule's obtained. My apologies for the inconvenience.
+        <b>Something went wrong!</b>
 
     </span><br><br><br><span class="button" onclick="dismissAnnouncement()">Dismiss</span><br><br><span style="font-size: 12px; font-style: italic; color: #335; cursor: pointer;" onclick="iHateAnnouncements()">Never show me announcements again</span></p>
 
@@ -803,7 +803,7 @@
         text-align: center;
         box-shadow: 10px 10px rgb(65, 65, 91);
         transition-duration: 0.2s;
-        /* display: none; /* no announcement needed! */
+        display: none; /* no announcement needed! */
     }
 
     .announcement:hover {
