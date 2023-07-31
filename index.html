@@ -1,11 +1,3 @@
-<!-- 
-
-    Hi, kehillah.today users! Here's the source code for this site.
-    It's all pretty bodgy, and if you're here, you're likely doing some maintenance on it. Sorry about that.
-    If I'm still at Kehillah, you can probably contact me at bgill2023@kehillahstudent.org.
-
--->
-
 <!DOCTYPE html>
 <html>
 
@@ -35,7 +27,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Righteous&family=Barlow+Semi+Condensed:wght@400;700&display=swap" rel="stylesheet" />
     <title>kehillah.today</title>
-    <script src="dates.js?v=10"></script>
+    <script src="dates.js?v=18"></script>
 </head>
 
 <body class="unselectable">
@@ -52,29 +44,24 @@
 
     <p id="announcement" class="announcement"><span style="font-size: 24px; font-weight: bold;">Announcement</span><br><br><span style="line-height: 1.2em">
 
-        <b>I was infomed by the administration that there was a special schedule today (Friday, February 17th), but I wasn't told what the schedule was.</b>
+        <b>Something went wrong!</b>
 
     </span><br><br><br><span class="button" onclick="dismissAnnouncement()">Dismiss</span><br><br><span style="font-size: 12px; font-style: italic; color: #335; cursor: pointer;" onclick="iHateAnnouncements()">Never show me announcements again</span></p>
 
-    <p class="display above-clock" id="graduation-display">&nbsp;GRADUATION&nbsp;</p>
 
-    <p class="display clock" id="graduation-clock"></p>
-
-    <span style="display: none">
     <p class="display above-clock"><span id="dashleft"></span>&emsp;<span id="whatsup"></span><span id="blockid" style="display: none">&ensp;<span class="blockid">1</span></span>&emsp;<span id="dashright"></span></p>
 
     <p class="display clock" id="clock"></p>
+    
 
     <p class="logo" >
         <span class="normaltext">kehillah</span><span style="color: #9590a5">.</span><span
             style="color: #cc9933">upcoming</span>
     </p>
 
-    <p class="notice" id="upcomingblock"><span id="upcomingnotice"></span></p>
+    <p style="margin: 20px; font-style: italic; font-size: 25px; color: #aac; display: none;" id="upcomingblock"><span id="upcomingnotice"></span></p>
 
-    <p id="beforeclubs" class="clubdisplay"></p>
     <span id="today"></span>
-    <p id="afterclubs" class="clubdisplay"></p>
 
     <br class="small">
 
@@ -85,7 +72,7 @@
     </p>
 
 
-    <p class="notice" id="tomorrowblock"><span id="tomorrownotice"></span></p>
+    <p style="margin: 20px; font-style: italic; font-size: 25px; color: #aac; display: none;" id="tomorrowblock"><span id="tomorrownotice"></span></p>
     
     <span id="tomorrow"></span>
     
@@ -139,31 +126,28 @@
     <p><label for="toggleblocktab" style="margin: 0px -15px 0px 20px">Block Name in Tab:</label><button class="button" onclick="BlockTab()" id="toggleblocktab">
         ON
     </button></p>
-</span>
+
     <p id="credits" style="margin: 20px; font-size: 17px;" class="lines normaltext">
-    <span>Created by B. Gill. Contact me at <a href="mailto: bgill2023@kehillahstudent.org"><span style="color: #8080a2">bgill2023@kehillahstudent.org</span></a>.</span><br>
-    <span>Data sourced from the <a href="https://kehillah.org/wp-content/uploads/2022/08/MasterSchedule22_23.jpg" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">Kehillah master schedule</span></a> and <a href="https://kehillah.org/wp-content/uploads/2022/07/One_Cal_22_23.pdf" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">one-page calendar</span></a>.</span><br>
+    <span>Created by B. Gill. Contact me at <a href="/cdn-cgi/l/email-protection#c3e3a1a4aaafaff1f3f1f083a8a6abaaafafa2abb0b7b6a7a6adb7edacb1a4"><span style="color: #8080a2"><span class="__cf_email__" data-cfemail="6c0e0b0500005e5c5e5f2c0709040500000d041f18190809021842031e0b">[email&#160;protected]</span></span></a>.</span><br>
+    <span>Data sourced from the <a href="https://kehillah.org/block-schedule" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">Kehillah block schedule</span></a> and <a href="https://kehillah.org/key-dates" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">one-page calendar</span></a>.</span><br>
     <span><span style="font-family: Righteous">kehillah.today</span> is not affiliated with <a href="https://kehillah.org/" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">kehillah.org</span></a> or the <a href="https://apps.apple.com/app/kehillah-today/id6443492717" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">mobile app</span></a> with the same name.</span><br>
     <span>Fonts used: <span style="font-family: Righteous">Righteous</span>, <span style="font-family: Bebas Neue">Bebas Neue</span>, and Barlow Semi Condensed.</span><br>
-    <span id="version">v0.6.7a — June 9th, 2023</span><br>
+    <span id="version">v0.6.4 — July 30th, 2023</span><br>
     <span></p>
-    <script>
-        // We start the script with a bunch of variable assignments. They're pretty much sorted by category, going from most important to least important.
-
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        minutes = 0;
         dnow = new Date(); //generates a date object
-        minutes = ((dnow.getSeconds() / 60) + dnow.getMinutes() + (dnow.getHours() * 60) + (dnow.getMilliseconds() / 60000)) // number of minutes since midnight (00:00)
         var dotw = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"] //days of the week
-        var fulldotw = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Logsday"] // remove logsday
+        var fulldotw = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Logsday"] //remove logsday
         var fullmoty = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"] //months of the year
-        var trigger = -1; // index of most recently-started event. -1 is "no events have passed", like what you'd see at midnight.
+        var trigger = -1;
         var ftrigger = -1;
-        var theschedule = "" // what schedule to load, like "FRI" (normal Friday) or "2023-01-01" (custom schedule for 2023-01-01.)
-        var tomorrowschedule = "" // like theschedule, but for tomorrow's schedule
+        var theschedule = ""
+        var tomorrowschedule = ""
         var blockcolors = ["rgba(198, 198, 218, 0.8)","#6ec0d6","#8d7cc2","#c17ba0","#e06665","#2aa3ac","#d64087","#b4a7d5","#9fc5e9","#d6a6be","#aaccaa","#c9ccaa","#6c91d9","#cfcf86", "#c288a2"] /* #0 is misc, 1-9 are blocks, 10 is lunch, 11 is RP, 12 is Kab Shab, 13 is Beit Midrash / Seminar, 14 is Advisory */
         var blockcolorsdark = [];
         var minleft; // minutes until next event;
         var currentevent; // current event
-        var todaysdate = (dnow.getFullYear() + "-" + apz(dnow.getMonth() + 1) + "-" + apz(dnow.getDate())); // gets current date in ISO format. you could use toISOString() or something like that but for some reason that kept changing the timezone to utc?? so it might change the date (VERY BAD)
 
         var eventnames = ["Passing Period","Block 1","Block 2","Block 3","Block 4","Block 5","Block 6","Block 7","Block 8","Block 9","Lunch","Reflective Practice","Kab Shab","Beit Midrash / Seminar","Advisory"]
         var eventnames_short = ["PASS","B1","B2","B3","B4","B5","B6","B7","B8","B9","LUN","RP","KS","SEM","ADV"]
@@ -179,10 +163,10 @@
         var tomorrowstart = 0;
         var datesearch = 0;
 
-        var noschool = false; // everyone's favorite boolean: whether there's school or not today
-        var noschooltomorrow = false; // whether there's no school tomorrow
+        var noschool = false;
+        var noschooltomorrow = false;
 
-        var passingperiodsvisible = true; // you will NEVER guess what this boolean represents
+        var passingperiodsvisible = true;
         var panic = true; // panic mode
         var blocktab = true; // block name in tab
         var newpanicoff = false; // whether the user has recently changed "Color Changes" to "Off"
@@ -191,17 +175,10 @@
         var istheClassNameformvisible = false;
         var customnamesforevents = []
         var regularnamesforevents = ["Block 1","Block 2","Block 3","Block 4","Block 5","Block 6","Block 7","Block 8","Block 9","Reflective Practice"]
-        var clubListToday = [[],[],[]]; // list of clubs for today. [0] is before school, [1] is lunch, [2] is after school
-        var clubListTomorrow = [[],[],[]];
-        var easterhue = 240; // the Easter Egg hue (when you click on the logo)        
-        var dtomorrow = new Date(); // tomorrow's date.
-        dtomorrow.setDate(dnow.getDate() + 1); // may cause errors if you load the page with less than one ms before midnight. statistically, this should happen about 1/86,400,000 of the time. from current website stats, this'll take about 1,600 years for this to cause a problem (assume 180 day school year).
-        var tomorrowsdate = (dtomorrow.getFullYear() + "-" + apz(dtomorrow.getMonth() + 1) + "-" + apz(dtomorrow.getDate())); // gets tomorrow's date in ISO format
 
-        var clubstoday = (clubs[todaysdate]); // list of clubs for today
-        var clubstomorrow = (clubs[tomorrowsdate]) // do this
+        var easterhue = 240; // the Easter Egg hue
 
-        document.getElementById('todayis').innerText = fulldotw[dnow.getDay()] + ", " + fullmoty[dnow.getMonth()] + " " + dnow.getDate() + " · " //updates the day on the top-left
+        document.getElementById('todayis').innerText = fulldotw[dnow.getDay()] + ", " + fullmoty[dnow.getMonth()] + " " + dnow.getDate() + " · " //updates 
 
         function apz(num) { /* add prefix zero. converts numbers like "2" into "02". useful for the large clock */
           return (num < 10 ? '0' : '') + num;
@@ -325,7 +302,7 @@
                 (((convert) * 60).toFixed(2) + "s");
             } else if (convert <= 60) { // if less than 60 minutes
                 convertible =
-                (Math.floor(convert)) +
+                (Math.floor((convert))) +
                     "m " +
                     (Math.floor((convert * 60)) % 60) +
                     "s"
@@ -401,7 +378,7 @@
             document.body.style.backgroundColor = "hsl(" + easterhue + ", 100%, 96%)"
         }
 
-        function getNextDay() { // returns the ISO 8601 day for tomorrow.
+        function findNextDay() { // returns the ISO 8601 day for tomorrow.
             var tomorrow = new Date();
             tomorrow.setDate(dnow.getDate() + 1)
             return tomorrow.getFullYear() + "-" + apz(tomorrow.getMonth() + 1) + "-" + apz(tomorrow.getDate())
@@ -475,16 +452,16 @@
         document.getElementById('dashleft').innerText = dasharray[dashes]; // puts the dashes on the screen
         document.getElementById('dashright').innerText = dasharray[dashes];
 
-        function dismissAnnouncement() { // dismisses the current announcement
+        function dismissAnnouncement() {
             document.getElementById('announcement').style.display = "none";
-            localStorage.setItem('announcement-2023-01-10','viewed');
+            localStorage.setItem('announcement-2023-02-16','viewed');
         }
 
-        if(localStorage.getItem('announcement-2023-01-10') == 'viewed' || localStorage.getItem('announcements') == 'none') {
+        if(localStorage.getItem('announcement-2023-02-16') == 'viewed' || localStorage.getItem('announcements') == 'none') {
             document.getElementById('announcement').style.display = "none";
         }
 
-        function iHateAnnouncements() { // removes the ability to ever see announcements again
+        function iHateAnnouncements() {
             localStorage.setItem('announcements','none')
             document.getElementById('announcement').style.display = "none";
         }
@@ -494,7 +471,7 @@
             for(search = 1; search < 50; search++) { // check the next 50 days
                 var day = new Date();
                 //console.log(search)
-                day.setDate(dnow.getDate() + search) // add the number of days to the current day. this should work
+                day.setDate(dnow.getDate() + search) // add the number of days to the current day [BUG] [BUG] [FIX THIS] [SITE MIGHT BREAK IF WEEKENDS EXIST]
                 var dateset = (WhichScheduleToLoad(day.getFullYear() + "-" + apz(day.getMonth() + 1) + "-" + apz(day.getDate()))) // turn the current date into an ISO string
                 if(!(datedata[dateset]['events'][0]['name'] == "No School")) { // if there's no school today...
                     for(s = 0; s < 20; s++) {
@@ -512,19 +489,12 @@
             return datenow.toLocaleTimeString([], {hour: 'numeric', minute:'2-digit', second:'2-digit'})
         }
 
-        function updateGraduation() {
-            var dateNowCongratsClassOf2023 = Date.now();
-            if(dateNowCongratsClassOf2023 < 1686510000000) return ["Graduation", UpdateClock((1686510000000 - Date.now())/60000)]
-            if(dateNowCongratsClassOf2023 < 1686520800000) return ["Graduation", UpdateClock((1686520800000 - Date.now())/60000)]
-            else return ["Have a great summer!", "--:--:--"]
-        }
-
         function UpdateTimer() {
             trigger = -1;
             var dnow = new Date();
             minutes = ((dnow.getSeconds() / 60) + dnow.getMinutes() + (dnow.getHours() * 60) + (dnow.getMilliseconds() / 60000))
             for (i = start; i < EventsToLoad; i++) {
-                document.getElementById('time_' + String(i)).innerHTML = MakeFunTimestamps(datedata[theschedule]['events'][i]['timestamp'] - minutes);
+                document.getElementById('event_' + String(i)).innerHTML = "<b>" + CustomEventName(datedata[theschedule]['events'][i]['name']) + "</b> at " + toOffset(datedata[theschedule]['events'][i]['timestamp'] - minutes) + " (" + MakeFunTimestamps(datedata[theschedule]['events'][i]['timestamp'] - minutes) + ")";
                 if (datedata[theschedule]['events'][i]['timestamp'] - minutes < 0) {
                     start += 1;
                     document.getElementById('event_' + String(i)).style.display = "none";
@@ -537,15 +507,13 @@
                 }
         }
         for (i = tomorrowstart; i < tomorrowEventsToLoad; i++) {
-                document.getElementById('ttime_' + String(i)).innerHTML = (MakeFunTimestamps(datedata[tomorrowschedule]['events'][i]['timestamp'] - minutes + 1440)); //adjust number of minutes
+                document.getElementById('tomorrow_' + String(i)).innerHTML = ("<b>" + CustomEventName(datedata[tomorrowschedule]['events'][i]['name']) + "</b> at " + toOffset(datedata[tomorrowschedule]['events'][i]['timestamp'] - minutes + 1440) + " (" + MakeFunTimestamps(datedata[tomorrowschedule]['events'][i]['timestamp'] - minutes + 1440) + ")"); //adjust number of minutes
                     if(ftrigger == -1) {
                     console.log('triggered thing - item #' + i + ' was visible!')
                         ftrigger = i;
                     }
         }
-            var congratsGrads = updateGraduation();
-            document.getElementById("graduation-clock").innerText = congratsGrads[1];
-            document.getElementById("graduation-display").innerText = congratsGrads[0];
+
             if(noschool == true || start === EventsToLoad) { // if there's no school or we've ran through all of today's events
             document.getElementById('upcomingblock').style.display = "block"
             if(noschool === false) {
@@ -573,50 +541,6 @@
                 }
             }
         }   
-
-        function clubsOnDate(date) { 
-            return clubs[date]
-        }
-
-        function getClubs() { // gets club data
-            var whenClub = ["Before School","Lunch","After School"];
-            if(clubstoday != undefined && clubstoday != "undefined") { // prevents the entire thing breaking if there's no clubs today. you could also solve this issue by making clubs happen all the time at kehillah. perhaps that would be better
-                for(a = 0; a < clubstoday.length; a++) {
-                    console.log(clubstoday[a]['club'] + whenClub.indexOf(clubstoday[a]['block']))
-                    clubListToday[whenClub.indexOf(clubstoday[a]['block'])].push(clubstoday[a]['club'].replace(/[①②③④⑤⑥⑦⑧⑨⑩]/g,''));
-                }
-            }
-            if(clubstomorrow != undefined && clubstomorrow != "undefined") { // prevents the entire thing breaking if there's no clubs tomorrow. you could also solve this issue by making clubs happen all the time at kehillah. perhaps that would be better
-                for(a = 0; a < clubstomorrow.length; a++) {
-                    console.log(clubstomorrow[a]['club'] + whenClub.indexOf(clubstomorrow[a]['block']))
-                    clubListTomorrow[whenClub.indexOf(clubstomorrow[a]['block'])].push(clubstomorrow[a]['club'].replace(/[①②③④⑤⑥⑦⑧⑨⑩]/g,''));
-                }
-            }
-        }
-
-        getClubs();
-
-        function miscFunctions() { // currently only has club-related stuff in it. this is just for lag purposes so that i don't make the site super laggy
-            if(minutes > dates[theschedule]['events'][0]['timestamp']) document.getElementById('beforeclubs').style.display = "none"; // hides the "Before School" club announcements if school's already started
-            if(minutes > 1020) document.getElementById('afterclubs').style.display = "none"; // hides the "After School" club announcements after 5:00 pm. might change later
-            
-        }
-
-        function clubListToHTML(item) { // makes the clubList array pretty, with colors and stuff. [item] is the array item in the clubList variable (0, 1, 2) -> (Before, Lunch, After)
-            var clubreturn;
-            if(item == 0) clubreturn = "Before School: "
-            if(item == 1) clubreturn = "Clubs: "
-            if(item == 2) clubreturn = "After School: "
-
-            console.log("clubList is " + clubListToday[item].length + " long")
-
-            if(clubListToday[item].length == 0) return "";
-            for(a = 0; a < clubListToday[item].length; a++) clubreturn += `<span class="clubitem" onclick="getClubInfo(` + clubListToday[item][a] + `)">` + clubListToday[item][a] + "</span>" + (a+1==clubListToday[item].length?"":", "); 
-            return clubreturn;
-        }
-
-        document.getElementById('beforeclubs').innerHTML = clubListToHTML(0); // do this
-        document.getElementById('afterclubs').innerHTML = clubListToHTML(2);
 
         function MakeEverything() {
             correctjsondata = window.datedata[WhichScheduleToLoad(undefined, false)]['events']
@@ -646,7 +570,7 @@
                 console.log("Made element event_" + q + ".");
                 div.id = ("event_" + q);
                 div.classList.add('event');
-                div.innerHTML = ("<b>" + CustomEventName(datedata[theschedule]['events'][q]['name']) + "</b> at " + toOffset(datedata[theschedule]['events'][q]['timestamp'] - minutes + 1440) + ` (<span id="time_` + q + `"></span>)<p id="clubs_` + q + `" class="clubs"></p>`); // creates an event, with some information (like the block name and timestamp)
+                div.innerHTML = ("Loading...");
                 div.style.padding = "15px";
                 div.style.marginBottom = "2px";
                 div.style.backgroundColor = "#9590a5";
@@ -661,12 +585,11 @@
                     document.getElementById('upcomingnotice').innerText = "No school today."
                 }
                 document.getElementById("today").appendChild(div);
-                if(CustomEventName(datedata[theschedule]['events'][q]['name']).startsWith('Lunch') && clubListToday[1].length > 0) document.getElementById('clubs_' + q).innerHTML = clubListToHTML(1); // adds clubs to Lunch, if they exist
             }
         }
 
         function MakeTomorrow() {
-            correctjsondata = window.datedata[WhichScheduleToLoad(getNextDay(), true)]['events']
+            correctjsondata = window.datedata[WhichScheduleToLoad(findNextDay(), true)]['events']
             console.log(correctjsondata)
             correctjsondata.forEach(function(object) {
                 console.log(object)
@@ -690,7 +613,7 @@
                 var div = document.createElement("div");
                 console.log("Made an element.");
                 div.id = ("tomorrow_" + i);
-                div.innerHTML = ("<b>" + CustomEventName(datedata[tomorrowschedule]['events'][i]['name']) + "</b> at " + toOffset(datedata[tomorrowschedule]['events'][i]['timestamp'] - minutes + 1440) + ` (<span id="ttime_` + i + `"></span>)`);
+                div.innerHTML = ("Loading...");
                 div.style.padding = "15px";
                 div.classList.add('event');
                 div.style.backgroundColor = "#9590a5";
@@ -708,7 +631,7 @@
             }
         }
 
-        function getFuture(html = false, condensed = false) { // spit out a list of upcoming schedules
+        function searchFuture(html = false, condensed = false) { // spit out a list of upcoming schedules
             var returnEvents = "";
             var currentLook;
             var specialDates = [];
@@ -729,7 +652,7 @@
             if(html) return returnEvents;
         }
 
-        document.getElementById('futureevents').innerHTML = getFuture(true, true);
+        document.getElementById('futureevents').innerHTML = searchFuture(true, true);
 
         function changeColor(colorname = updateColor()) { // change all of the colors in the document
             if(colorname != false) { // if there are colors to change
@@ -795,17 +718,20 @@
         MakeEverything() // When the code began to create elements and time—
         MakeTomorrow()   // the website being unformed and void, with darkness over the surface of the page and pure emptiness covering its elements—
         CheckYourself()  // The code said, “bro go check yourself”; and the page checked itself. 
-        miscFunctions()  // i'm pretty sure that's how Genesis 1 goes
 
-        setInterval(UpdateTimer, 58);
-        setInterval(changeColor, 1000);
-        setInterval(miscFunctions, 10000);
+        function krug() {
+            location.reload();
+        }
+
+        setInterval(UpdateTimer, 58)
+        setInterval(changeColor, 1000)
+        setInterval(krug, 1800000); // did you REALLY have to wait until 7 am to give me the special schedule??
     </script>
 
 </body>
 <style>
     body {
-        background-color: #fff;
+        background-color: #eef;
     }
 
     .display {
@@ -914,11 +840,6 @@
         text-decoration: #aac underline;
     }
 
-    .clubs {
-        font-size: 18px;
-        font-style: oblique;
-    }
-
     p {
         line-height: 1;
         margin: 0
@@ -984,14 +905,6 @@
         line-height: 1.5em;
     }
 
-    .clubdisplay {
-        margin: 15px;
-        font-style: italic;
-        font-size: 18px;
-        color: rgba(0, 0, 0, 0.3);
-        line-height: 1em;
-    }
-
     .classsubmit {
         all: unset;
         padding: 3px;
@@ -1030,19 +943,6 @@
         }
     }
 
-    .notice {
-        margin: 20px;
-        font-style: italic;
-        font-size: 25px;
-        color: #aac;
-        display: none;
-    }
-
-    .clubitem {
-        color: #151540;
-        cursor: pointer;
-    }
-
     .hidden {
         display: none;
     }
@@ -1052,14 +952,14 @@
     }
 
     :root {
-        --normal: #000;
-        --warning: #000;
-        --panic: #000;
-        --passing: #000;
-        --bgnormal: #fff;
-        --bgwarning: #fff;
-        --bgpanic: #fff;
-        --bgpassing: #fff;
+        --normal: #335;
+        --warning: #553;
+        --panic: #300;
+        --passing: #555;
+        --bgnormal: #eef;
+        --bgwarning: #ffc;
+        --bgpanic: #fcc;
+        --bgpassing: #eee;
     }
 
     * {
