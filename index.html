@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html id="doc"> <!-- is this standard? no. should i be doing this? no of course not -->
 
 <head>
     <title>Kehillah's Bell Schedule | kehillah.today</title>
@@ -48,11 +48,14 @@
 
     </span><br><br><br><span class="button" onclick="dismissAnnouncement()">Dismiss</span><br><br><span style="font-size: 12px; font-style: italic; color: #335; cursor: pointer;" onclick="iHateAnnouncements()">Never show me announcements again</span></p>
 
+    <p id="warning" style="background: linear-gradient(140deg, rgb(209, 20, 20) 0%, rgb(107, 11, 11) 100%); padding: 15px; font-size: 20px; margin: 10px; color: white; border-radius: 5px;">⚠️ <b>WARNING!</b> No special schedules have been provided for the 2023–2024 school year.<br>
+    If you have a copy, please email me it immediately.</p>
 
     <p class="display above-clock"><span id="dashleft"></span>&emsp;<span id="whatsup"></span><span id="blockid" style="display: none">&ensp;<span class="blockid">1</span></span>&emsp;<span id="dashright"></span></p>
 
     <p class="display clock" id="clock"></p>
     
+    <p id="progressbar" style="width: 99%"></p>
 
     <p class="logo" >
         <span class="normaltext">kehillah</span><span style="color: #9590a5">.</span><span
@@ -80,7 +83,7 @@
 
     <p class="logo">
         <span class="normaltext">kehillah</span><span style="color: #9590a5">.</span><span
-            style="color: #9933cc">future</span> <span class="specialschedule beta">BETA</span>
+            style="color: #9933cc">future</span>
 
     </p>
 
@@ -107,8 +110,10 @@
         <input type="text" class="classinput" id="classBlock7" placeholder="Block 7"><br>
         <label for="classBlock8" id="labelBlock8">Block 8</label>
         <input type="text" class="classinput" id="classBlock8" placeholder="Block 8"><br>
-        <label for="classBlock9" id="labelBlock9">Block 9</label>
-        <input type="text" class="classinput" id="classBlock9" placeholder="Block 9"><br>
+        <span style="display: none">
+            <label for="classBlock9" id="labelBlock9">Block 9</label>
+            <input type="text" class="classinput" id="classBlock9" placeholder="Block 9"><br>
+        </span>
         <label for="classReflectivePractice" id="labelReflectivePractice">Reflective Practice</label>
         <input type="text" class="classinput" id="classReflectivePractice" placeholder="Reflective Practice">
 <br><br>
@@ -127,12 +132,16 @@
         ON
     </button></p>
 
+    <p><label for="toggletheme" style="margin: 0px -15px 0px 20px">Dark Mode:</label><button class="button" onclick="DarkMode()" id="toggletheme">
+        OFF
+    </button> <span class="specialschedule beta">BETA</span></p>
+
     <p id="credits" style="margin: 20px; font-size: 17px;" class="lines normaltext">
     <span>Created by B. Gill. Contact me at <a href="/cdn-cgi/l/email-protection#c3e3a1a4aaafaff1f3f1f083a8a6abaaafafa2abb0b7b6a7a6adb7edacb1a4"><span style="color: #8080a2"><span class="__cf_email__" data-cfemail="6c0e0b0500005e5c5e5f2c0709040500000d041f18190809021842031e0b">[email&#160;protected]</span></span></a>.</span><br>
     <span>Data sourced from the <a href="https://kehillah.org/block-schedule" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">Kehillah block schedule</span></a> and <a href="https://kehillah.org/key-dates" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">one-page calendar</span></a>.</span><br>
     <span><span style="font-family: Righteous">kehillah.today</span> is not affiliated with <a href="https://kehillah.org/" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">kehillah.org</span></a> or the <a href="https://apps.apple.com/app/kehillah-today/id6443492717" target="_blank" rel="noopener noreferrer"><span style="color: #8080a2">mobile app</span></a> with the same name.</span><br>
     <span>Fonts used: <span style="font-family: Righteous">Righteous</span>, <span style="font-family: Bebas Neue">Bebas Neue</span>, and Barlow Semi Condensed.</span><br>
-    <span id="version">v0.6.4 — July 30th, 2023</span><br>
+    <span id="version">v0.6.6 — August 15th, 2023</span><br>
     <span></p>
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         minutes = 0;
@@ -140,7 +149,7 @@
         var dotw = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"] //days of the week
         var fulldotw = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Logsday"] //remove logsday
         var fullmoty = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"] //months of the year
-        var trigger = -1;
+        var trigger = -1; // number of events passed? i dunno. it just kinda works. if you have to use it i'm sorry
         var ftrigger = -1;
         var theschedule = ""
         var tomorrowschedule = ""
@@ -149,7 +158,7 @@
         var minleft; // minutes until next event;
         var currentevent; // current event
 
-        var eventnames = ["Passing Period","Block 1","Block 2","Block 3","Block 4","Block 5","Block 6","Block 7","Block 8","Block 9","Lunch","Reflective Practice","Kab Shab","Beit Midrash / Seminar","Advisory"]
+        var eventnames = ["Passing Period","Block 1","Block 2","Block 3","Block 4","Block 5","Block 6","Block 7","Block 8","Block 9","Lunch","Reflective Practice","Kab Shab","Beit Midrash / Seminar","Advisory"] // but why is there still block 9 if it's been removed from kehillah's schedule?? first of all, too much work. second of all, i have a hunch they're gonna add it back next year
         var eventnames_short = ["PASS","B1","B2","B3","B4","B5","B6","B7","B8","B9","LUN","RP","KS","SEM","ADV"]
         var eventnames_future = ["?!", "1", "2", "3", "4", "5", "6", "7", "8", "9", "Lunch", "RP", "Kab Shab", "Beit Midrash"]
         var correctjsondata = "";
@@ -169,6 +178,7 @@
         var passingperiodsvisible = true;
         var panic = true; // panic mode
         var blocktab = true; // block name in tab
+        var darkmode = false; // dark mode
         var newpanicoff = false; // whether the user has recently changed "Color Changes" to "Off"
         var nexteventtime = 0;
         var cookiejar = [];
@@ -223,6 +233,20 @@
                 blocktab = true;
                 toggleblocktab.innerText = "ON";
                 localStorage.setItem('blocktab','true');
+            }
+        }
+
+        function DarkMode() { // toggles the dark mode theme
+            if(darkmode) {
+                darkmode = false;
+                document.getElementById("doc").style.filter = "";
+                toggletheme.innerText = "OFF";
+                localStorage.setItem('darkmode','false');
+            } else {
+                darkmode = true;
+                toggletheme.innerText = "ON";
+                document.getElementById("doc").style.filter = "invert(1) hue-rotate(180deg)";
+                localStorage.setItem('darkmode','true');
             }
         }
 
@@ -531,6 +555,7 @@
                 currentevent = "Free";
             } else {
                 currentevent = datedata[theschedule]['events'][trigger - 1]['name'];
+                document.getElementById("progressbar").style.width = (minleft / (datedata[theschedule]['events'][trigger]["timestamp"] - datedata[theschedule]['events'][trigger - 1]["timestamp"]) * 100) + "%"
             }
             document.getElementById('whatsup').innerHTML = CustomEventName(currentevent)
 
@@ -715,12 +740,14 @@
         else PanicMode(true); // if the user doesn't have a PanicMode localStorage, default to true
         } //these ending "}"s are the bane of my existence. 
 
+        if(localStorage.getItem("darkmode") == "true") DarkMode()
+
         MakeEverything() // When the code began to create elements and time—
         MakeTomorrow()   // the website being unformed and void, with darkness over the surface of the page and pure emptiness covering its elements—
         CheckYourself()  // The code said, “bro go check yourself”; and the page checked itself. 
 
         function krug() {
-            location.reload();
+            location.reload(); // womp womp
         }
 
         setInterval(UpdateTimer, 58)
@@ -834,6 +861,11 @@
         background-color: rgb(110, 192, 214);
         padding: 10px;
         border-radius: 10px;
+    }
+
+    #progressbar {
+        background-color: #0003;
+        height: 10px;
     }
 
     a {
